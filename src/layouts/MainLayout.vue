@@ -56,8 +56,9 @@
 
       <q-tabs align="right">
         <q-route-tab to="/home" label="Notícias" />
-        <q-route-tab to="/userPage" label="Usuários" />
-        <q-route-tab to="/pacientes" label="Pacientes" />
+        <q-route-tab to="/userPage" label="Usuários" v-if="!isUser && !isAgente"/>
+        <q-route-tab to="/pacientes" label="Pacientes" v-if="!isUser" />
+        <q-route-tab to="/minhaFicha" label="Minha Ficha" v-if="isUser" />
         <q-route-tab to="/paginaSobre" label="Sobre nós" />
       </q-tabs>
 
@@ -103,6 +104,17 @@ export default {
       darkMode,
       fazerLogoff,
     };
+  },
+  computed: {
+
+    isUser() {
+      const auth = localStorage.getItem('auth');
+      return auth === 'user';
+    },
+    isAgente() {
+      const auth = localStorage.getItem('auth');
+      return auth === 'agente';
+    },
   },
 };
 </script>

@@ -57,6 +57,9 @@ const routes = [
         component: () => import('pages/calendarioP.vue'),
         beforeEnter: authGuard,
       },
+      {
+        path: '/minhaFicha', name: 'minhaFicha', component: () => import('pages/minhaFicha'), beforeEnter: authGuard,
+      },
 
     ],
   },
@@ -73,6 +76,7 @@ const routes = [
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue'),
   },
+
 ];
 
 export default routes;

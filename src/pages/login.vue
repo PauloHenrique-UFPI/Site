@@ -30,6 +30,40 @@
         </q-form>
       </q-card>
     </div>
+
+    <q-dialog v-model="missingFieldsDialog"
+    persistent transition-show="scale" transition-hide="scale">
+    <q-card class="bg-red-7 text-white" style="width: 300px">
+      <q-card-section>
+        <div class="text-h6 text-white">Atenção</div>
+      </q-card-section>
+
+      <q-card-section class="q-pt-none text-white">
+        Existem campos obrigatórios que devem ser preenchidos.
+      </q-card-section>
+
+      <q-card-actions align="center" class="bg-white text-teal">
+        <q-btn flat label="OK" v-close-popup />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+
+  <q-dialog v-model="persistent" persistent transition-show="scale" transition-hide="scale">
+      <q-card class="bg-red-7 text-white" style="width: 300px">
+        <q-card-section>
+          <div class="text-h6 text-white">Falha de autenticação</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none text-white">
+          Não foi possível fazer login. Tente novamente mais tarde.
+        </q-card-section>
+
+        <q-card-actions align="center" class="bg-white text-teal">
+          <q-btn flat label="OK" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
   </q-page>
 </template>
 
@@ -48,38 +82,42 @@ export default {
       password: '',
       loading: false,
       showButton: true,
+      persistent: false,
+      missingFieldsDialog: false,
     };
   },
   methods: {
     async submitForm(event) {
       event.preventDefault();
 
-      try {
-        this.loading = true;
-        this.showButton = false;
+      if (this.username && this.password) {
+        try {
+          this.loading = true;
+          this.showButton = false;
 
-        const payload = {
-          email: this.username,
-          password: this.password,
-        };
+          const payload = {
+            email: this.username,
+            password: this.password,
+          };
 
-        const response = await api.post('https://api-koch.onrender.com/login', payload);
-        const { token } = response.data;
-        const { rule } = response.data;
-        // eslint-disable-next-line no-console
-        console.log(token);
-        localStorage.setItem('token', token);
-        localStorage.setItem('auth', rule);
+          const response = await api.post('https://api-koch.onrender.com/login', payload);
+          const { token } = response.data;
+          const { rule } = response.data;
+          const { idPaciente } = response.data;
 
-        this.$router.push('/home');
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.log(error);
-        // eslint-disable-next-line no-alert
-        alert(error.request.response);
-      } finally {
-        this.loading = false;
-        this.showButton = true;
+          localStorage.setItem('token', token);
+          localStorage.setItem('auth', rule);
+          localStorage.setItem('idPaciente', idPaciente);
+
+          this.$router.push('/home');
+        } catch (error) {
+          this.persistent = true;
+        } finally {
+          this.loading = false;
+          this.showButton = true;
+        }
+      } else {
+        this.missingFieldsDialog = true;
       }
     },
   },

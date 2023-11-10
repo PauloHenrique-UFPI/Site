@@ -1,7 +1,7 @@
 <template>
   <div>
     <FullCalendar :options="calendarOptions" />
-    <q-dialog v-model="dialogVisible">
+    <q-dialog v-model="dialogVisible" v-if="!isUser" >
       <q-card>
         <q-card-section>
           <q-input v-model="eventTitle" label="Título do Evento" />
@@ -30,7 +30,7 @@
             </template>
           </q-input>
 
-          <q-checkbox v-model="repeatWeekly">Repetir toda semana</q-checkbox>
+          <!-- <q-checkbox v-model="repeatWeekly">Repetir toda semana</q-checkbox> -->
         </q-card-section>
         <q-card-actions align="right">
           <q-btn label="Adicionar Evento" color="green" @click="addEvent" />
@@ -49,11 +49,59 @@
         </q-card-section>
         <q-card-actions align="right">
           <q-btn label="Fechar" color="primary" @click="closeEventDetails" />
-          <q-btn label="Excluir" color="negative" @click="deleteEvent(selectedEvent)" />
+          <q-btn label="Excluir" color="negative"
+           @click="deleteEvent(selectedEvent)" v-if="!isUser"  />
         </q-card-actions>
       </q-card>
     </q-dialog>
   </div>
+  <q-dialog v-model="carregouEventos" persistent transition-show="scale" transition-hide="scale">
+      <q-card class="bg-red-7 text-white" style="width: 300px">
+        <q-card-section>
+          <div class="text-h6 text-white">Falha ao carregar Eventos</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none text-white">
+          Não foi possível carregar seus eventos. Tente novamente mais tarde.
+        </q-card-section>
+
+        <q-card-actions align="center" class="bg-white text-teal">
+          <q-btn flat label="OK" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model="adicionouEvento" persistent transition-show="scale" transition-hide="scale" >
+      <q-card class="bg-red-7 text-white" style="width: 300px">
+        <q-card-section>
+          <div class="text-h6 text-white">Falha ao criar Evento</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none text-white">
+          Não foi possível criar seu eventos. Tente novamente mais tarde.
+        </q-card-section>
+
+        <q-card-actions align="center" class="bg-white text-teal">
+          <q-btn flat label="OK" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model="removeuEvento" persistent transition-show="scale" transition-hide="scale">
+      <q-card class="bg-red-7 text-white" style="width: 300px">
+        <q-card-section>
+          <div class="text-h6 text-white">Falha ao excluir Evento</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none text-white">
+          Não foi possível excluir seu evento. Tente novamente mais tarde.
+        </q-card-section>
+
+        <q-card-actions align="center" class="bg-white text-teal">
+          <q-btn flat label="OK" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
 </template>
 
 <script>
@@ -61,6 +109,7 @@ import FullCalendar from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import moment from 'moment';
+import axios from 'axios';
 import 'moment/locale/pt-br';
 import {
   QDialog, QCard, QCardSection, QInput, QBtn,
@@ -77,22 +126,23 @@ export default {
   },
   data() {
     return {
+      carregouEventos: false,
+      adicionouEvento: false,
+      removeuEvento: false,
       calendarOptions: {
+
         plugins: [dayGridPlugin, interactionPlugin],
         initialView: 'dayGridMonth',
         locale: 'pt-br',
         eventClick: this.handleEventClick,
         dateClick: this.handleDateClick,
-        events: [
-          { id: 1, title: 'Dia de retorno a PAM', date: '2023-08-08T10:00' },
-          { id: 2, title: 'Dia de tomar medicação', date: '2023-08-02T14:30' },
-        ],
+        events: [],
         eventRender: this.handleEventRender,
       },
       dialogVisible: false,
       eventTitle: '',
       selectedDate: '',
-      selectedTime: '10:00',
+      selectedTime: '07:00',
       repeatWeekly: false,
       showEventDetails: false,
       selectedEvent: {
@@ -103,6 +153,16 @@ export default {
       },
     };
   },
+  computed: {
+    isUser() {
+      const auth = localStorage.getItem('auth');
+      return auth === 'user';
+    },
+  },
+  mounted() {
+    this.carregarEventos(this.$route.params.id);
+  },
+
   methods: {
     handleEventClick(info) {
       const clickedEvent = info.event;
@@ -118,37 +178,48 @@ export default {
       this.selectedDate = arg.dateStr;
       this.dialogVisible = true;
     },
-    addEvent() {
-      const newEvent = {
-        id: Date.now(),
-        title: this.eventTitle,
-        date: `${this.selectedDate}T${this.selectedTime}`,
-      };
 
-      this.calendarOptions.events.push(newEvent);
+    async addEvent() {
+      const formData = new FormData();
+      formData.append('tittle', this.eventTitle);
+      formData.append('data', `${this.selectedDate}T${this.selectedTime}`);
+      formData.append('paciente', this.$route.params.id);
 
-      if (this.repeatWeekly) {
-        const startDate = moment(this.selectedDate);
-        for (let i = 1; i <= 26; i += 1) {
-          const newDate = startDate.clone().add(i * 7, 'days').format('YYYY-MM-DD');
-          this.calendarOptions.events.push({
-            id: Date.now() + i,
-            title: this.eventTitle,
-            date: `${newDate}T${this.selectedTime}`,
-          });
-        }
+      try {
+        const token = localStorage.getItem('token');
+        await axios.post('https://api-koch.onrender.com/create-evento', formData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        this.carregarEventos(this.$route.params.id);
+        this.closeDialog();
+      } catch (error) {
+        this.adicionouEvento = true;
       }
-      this.closeDialog();
     },
-    deleteEvent(eventToDelete) {
+
+    async deleteEvent(eventToDelete) {
       const idToDelete = parseInt(eventToDelete.id, 10);
       const index = this.calendarOptions.events.findIndex(
         (event) => event.id === idToDelete,
       );
 
       if (index !== -1) {
-        this.calendarOptions.events.splice(index, 1);
-        this.closeEventDetails();
+        const token = localStorage.getItem('token');
+        try {
+          await axios.delete(`https://api-koch.onrender.com/delete-evento/${idToDelete}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          });
+          this.calendarOptions.events.splice(index, 1);
+          this.closeEventDetails();
+        } catch (error) {
+          this.removeuEvento = true;
+        }
       }
     },
 
@@ -156,7 +227,7 @@ export default {
       this.dialogVisible = false;
       this.eventTitle = '';
       this.selectedDate = '';
-      this.selectedTime = '10:00';
+      this.selectedTime = '07:00';
       this.repeatWeekly = false;
     },
     closeEventDetails() {
@@ -171,6 +242,25 @@ export default {
     handleEventRender(info) {
       const eventElement = info.el;
       eventElement.classList.add('clickable');
+    },
+    async carregarEventos(id) {
+      const token = localStorage.getItem('token');
+      try {
+        const response = await axios.get(`https://api-koch.onrender.com/eventos/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const eventosDaApi = response.data.groups;
+
+        this.calendarOptions.events = eventosDaApi.map((evento) => ({
+          id: evento.id,
+          title: evento.tittle,
+          date: evento.date,
+        }));
+      } catch (error) {
+        this.carregouEventos = true;
+      }
     },
   },
 };

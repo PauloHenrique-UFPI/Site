@@ -45,12 +45,8 @@ export default {
           },
         });
         this.noticia = response.data;
-        // eslint-disable-next-line no-console
-        console.log(this.noticia);
         this.isLoading = false;
       } catch (error) {
-        // eslint-disable-next-line no-console
-        console.log(error);
         this.isLoading = false;
       }
     },

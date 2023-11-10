@@ -31,7 +31,7 @@
           direction="up"
         >
           <q-fab-action color="green" to="/addPacientes" icon="add" label="Add Paciente" />
-          <q-fab-action color="red" @click="deletarAtivo = !deletarAtivo">
+          <q-fab-action color="red" @click="deletarAtivo = !deletarAtivo" v-if="!isAgente">
                 <template v-if="deletarAtivo">
                   <q-icon name="cancel" />
                   Cancelar
@@ -115,6 +115,10 @@ export default defineComponent({
       const auth = localStorage.getItem('auth');
       return auth === 'user';
     },
+    isAgente() {
+      const auth = localStorage.getItem('auth');
+      return auth === 'agente';
+    },
     pacienteFiltrados() {
       return this.lista.filter((paciente) => {
         const termoPesquisa = this.filtro.toLowerCase();
@@ -159,8 +163,6 @@ export default defineComponent({
     async executarExclusao() {
       const token = localStorage.getItem('token');
       if (this.indexExclusao !== null) {
-        console.log(this.indexExclusao);
-        console.log(this.id);
         try {
           await api.delete(`https://api-koch.onrender.com/delete-paciente/${this.id}`, {
             headers: {
@@ -169,7 +171,7 @@ export default defineComponent({
           });
           this.lista.splice(this.indexExclusao, 1);
         } catch (error) {
-          console.log(error);
+          // console.log(error);
         }
 
         this.cancelarExclusao();

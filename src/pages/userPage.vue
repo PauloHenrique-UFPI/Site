@@ -1,5 +1,14 @@
 <template>
   <div class="q-pa-md">
+    <q-card-actions align="right" class="bg-white text-teal">
+      <q-btn
+        type="submit"
+        :loading="submitting"
+        label="Adicionar Usuário"
+        class="q-mt-md"
+        color="teal"
+      />
+    </q-card-actions>
     <q-table
       flat bordered
       title="Tabela de Usuários"
@@ -64,105 +73,202 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <q-dialog v-model="showAddDialog">
+      <q-card class="my-card">
+        <q-card-section>
+          <q-input
+            filled
+            v-model="newUser.name"
+            label="Nome *"
+            lazy-rules
+            :rules="[ val => val && val.length > 0]"
+          />
+          <q-input
+            filled
+            v-model="newUser.email"
+            label="Email *"
+            lazy-rules
+            :rules="[ val => val && val.length > 0]"
+          />
+          <q-input
+            filled
+            v-model="newUser.password"
+            label="Senha *"
+            type="password"
+            lazy-rules
+            :rules="[ val => val && val.length > 0]"
+          />
+          <q-input
+            filled
+            v-model="newUser.number"
+            label="Número *"
+            lazy-rules
+            :rules="[ val => val && val.length > 0]"
+          />
+          <q-input
+            filled
+            v-model="newUser.rule"
+            label="Regra *"
+            lazy-rules
+            :rules="[ val => val && val.length > 0]"
+          />
+          <q-input
+            filled
+            v-model="newUser.id_paciente"
+            label="ID do Paciente *"
+            lazy-rules
+            :rules="[ val => val && val.length > 0]"
+          />
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn color="negative" label="Cancelar" @click="showAddDialog = false" />
+          <q-btn color="positive" label="Adicionar" @click="addUser" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
 <script>
+import { ref, onMounted } from 'vue';
+import { api } from 'boot/axios';
+
 export default {
-  data() {
+  setup() {
+    const submitting = ref(false);
+    const rows = ref([]);
+    const showEditDialog = ref(false);
+    const showDeleteDialog = ref(false);
+    const selectedRow = ref(null);
+
+    const editRow = (row) => {
+      selectedRow.value = { ...row };
+      showEditDialog.value = true;
+    };
+
+    const saveRow = () => {
+      const index = rows.value.findIndex((row) => row.id === selectedRow.value.id);
+      if (index !== -1) {
+        rows.value[index] = { ...selectedRow.value };
+      }
+      showEditDialog.value = false;
+    };
+
+    const confirmDeleteRow = (row) => {
+      selectedRow.value = row;
+      showDeleteDialog.value = true;
+    };
+
+    const closeDeleteDialog = () => {
+      showDeleteDialog.value = false;
+    };
+
+    const deleteRow = () => {
+      const index = rows.value.findIndex((row) => row.id === selectedRow.value.id);
+      if (index !== -1) {
+        rows.value.splice(index, 1);
+      }
+      showDeleteDialog.value = false;
+    };
+
+    onMounted(async () => {
+      const token = localStorage.getItem('token');
+      try {
+        const response = await api.get('https://api-koch.onrender.com/contatos', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        // console.log(response);
+        const { groups } = response.data;
+
+        rows.value = groups.map((group) => ({
+          id: group.id,
+          name: group.name,
+          email: group.email,
+          tipo: group.rule,
+        }));
+      } catch (error) {
+        // console.error('Erro ao carregar dados da API:', error);
+      }
+    });
+
     return {
-      columns: [
-        {
-          name: 'Id',
-          required: true,
-          label: 'Id',
-          align: 'left',
-          field: 'id',
-          sortable: true,
-        },
-        {
-          name: 'Nome',
-          required: true,
-          label: 'Nome',
-          align: 'center',
-          field: 'name',
-          sortable: true,
-        },
-        {
-          name: 'Email',
-          required: true,
-          label: 'Email',
-          align: 'left',
-          field: 'email',
-          sortable: true,
-        },
-        {
-          name: 'Tipo',
-          required: true,
-          label: 'Tipo',
-          align: 'left',
-          field: 'tipo',
-          sortable: true,
-        },
-        {
-          name: 'Ações',
-          required: true,
-          label: 'Ações',
-          align: 'left',
-        },
-      ],
-      rows: [
-        {
-          id: 1,
-          name: 'João',
-          email: 'Joao@gmail.com',
-          tipo: 'ADM',
-        },
-        {
-          id: 2,
-          name: 'Paulo',
-          email: 'Paulo@gmail.com',
-          tipo: 'AGENTE',
-        },
-        {
-          id: 3,
-          name: 'Lucas',
-          email: 'Lucas@gmail.com',
-          tipo: 'USER',
-        },
-      ],
-      showEditDialog: false,
-      showDeleteDialog: false,
-      selectedRow: null,
+      submitting,
+      rows,
+      showEditDialog,
+      showDeleteDialog,
+      selectedRow,
+      editRow,
+      saveRow,
+      confirmDeleteRow,
+      closeDeleteDialog,
+      deleteRow,
     };
   },
+  mounted() {
+    // console.log(this.rows.data);
+  },
   methods: {
-    editRow(row) {
-      this.selectedRow = { ...row }; // Clona os dados da linha selecionada
-      this.showEditDialog = true;
-    },
-    saveRow() {
-      // Encontre a linha correspondente na matriz e atualize-a
-      const index = this.rows.findIndex((row) => row.id === this.selectedRow.id);
-      if (index !== -1) {
-        this.rows[index] = { ...this.selectedRow };
+    async submitForm(event) {
+      event.preventDefault();
+      if (this.titulo && this.prefacio && this.descricao && this.img) {
+        try {
+          const token = localStorage.getItem('token');
+          const formData = new FormData();
+          this.loading = true;
+
+          formData.append('titulo', this.titulo);
+          formData.append('img', this.img);
+          formData.append('desc_curta', this.prefacio);
+          formData.append('desc_longa', this.descricao);
+
+          await api.post('https://api-koch.onrender.com/create-new', formData, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+
+          this.$router.push('/home');
+        } catch (error) {
+          this.persistent = true;
+          this.loading = false;
+        } finally {
+          this.loading = false;
+        }
+      } else {
+        this.missingFieldsDialog = true;
       }
-      this.showEditDialog = false;
     },
-    confirmDeleteRow(row) {
-      this.selectedRow = row;
-      this.showDeleteDialog = true;
-    },
-    closeDeleteDialog() {
-      this.showDeleteDialog = false;
-    },
-    deleteRow() {
-      const index = this.rows.findIndex((row) => row.id === this.selectedRow.id);
-      if (index !== -1) {
-        this.rows.splice(index, 1);
-      }
-      this.showDeleteDialog = false;
-    },
+    // editRow(row) {
+    //   this.selectedRow = { ...row }; // Clona os dados da linha selecionada
+    //   this.showEditDialog = true;
+    // },
+    // saveRow() {
+    //   // Encontre a linha correspondente na matriz e atualize-a
+    //   const index = this.rows.findIndex((row) => row.id === this.selectedRow.id);
+    //   if (index !== -1) {
+    //     this.rows[index] = { ...this.selectedRow };
+    //   }
+    //   this.showEditDialog = false;
+    // },
+    // confirmDeleteRow(row) {
+    //   this.selectedRow = row;
+    //   this.showDeleteDialog = true;
+    // },
+    // closeDeleteDialog() {
+    //   this.showDeleteDialog = false;
+    // },
+    // deleteRow() {
+    //   const index = this.rows.findIndex((row) => row.id === this.selectedRow.id);
+    //   if (index !== -1) {
+    //     this.rows.splice(index, 1);
+    //   }
+    //   this.showDeleteDialog = false;
+    // },
   },
 };
 </script>

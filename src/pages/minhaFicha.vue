@@ -37,69 +37,26 @@
         </div>
         </div>
 
-        <h3 style="padding: 15px;">Prontuário</h3>
-        <div class="container" v-if="prontuarioChave">
-          <q-btn
-            class="botao btn-fixed-width"
-            color="red"
-            label="Visualizar Prontuário"
-            icon="assignment"
-            @click="showProntuarioDialog = true"
-          />
-        </div>
-
-        <div class="container" v-if="!prontuarioChave">
-          <q-btn
-            class="botao btn-fixed-width"
-            color="red"
-            label="Adicionar Prontuário"
-            icon="add"
-            @click="adicionar(pacienteChave)"
-          />
-        </div>
       </div>
     </div>
 
-    <q-dialog v-model="showProntuarioDialog">
+    <q-dialog v-model="carregou" persistent transition-show="scale" transition-hide="scale">
+        <q-card class="bg-red-7 text-white" style="width: 300px">
+          <q-card-section>
+            <div class="text-h6 text-white">Falha ao carregar ficha de paciente</div>
+          </q-card-section>
 
-      <q-card>
-        <q-card-section>
-          <ul class="medical-history">
-            <div class="q-dialog-title"><strong>Informações do Prontuário</strong></div>
-              <div class="registro-item">
-                <div class="registro-date"><strong>Tipo:</strong>
-                  {{ prontuarioInfo.tipo }}</div>
-                <div class="registro-description"><strong>População Especifica:</strong>
-                  {{ prontuarioInfo.popu_especifica }}</div>
-                <div class="registro-description"><strong>Beneficiario:</strong>
-                  {{ prontuarioInfo.beneficiario }}</div>
-                <div class="registro-description"><strong>Tipo da doença:</strong>
-                  {{ prontuarioInfo.tipo_doenca }}</div>
-                <div class="registro-description"><strong>Extrapulmonar:</strong>
-                  {{ prontuarioInfo.se_extrapulmonar }}</div>
-                <div class="registro-description"><strong>Agravos:</strong>
-                  {{ prontuarioInfo.agravos }}</div>
-                <div class="registro-description"><strong>Diagnostico:</strong>
-                  {{ prontuarioInfo.diagnostico }}</div>
-                <div class="registro-description"><strong>Radiografia:</strong>
-                  {{ prontuarioInfo.radiografia }}</div>
-                <div class="registro-description"><strong>HIV:</strong>
-                  {{ prontuarioInfo.hiv }}</div>
-              </div>
+          <q-card-section class="q-pt-none text-white">
+            Não foi possível carregar sua ficha. Tente novamente mais tarde.
+          </q-card-section>
 
-          </ul>
-        </q-card-section>
-          <q-card-actions align="center">
-            <q-btn
-            label="Fechar"
-            color="red"
-            @click="showProntuarioDialog = false"
-          />
+          <q-card-actions align="center" class="bg-white text-teal">
+            <q-btn flat label="OK" v-close-popup />
           </q-card-actions>
-      </q-card>
-
-    </q-dialog>
+        </q-card>
+      </q-dialog>
   </div>
+
 </template>
 1
 <script>
@@ -114,14 +71,13 @@ export default {
       prontuarioChave: false,
       showProntuarioDialog: false,
       prontuarioInfo: null,
+      carregou: false,
 
     };
   },
   mounted() {
-    this.carregaPaciente(this.$route.params.id)
-      .then(() => {
-        this.verificarProntuario(this.$route.params.id);
-      });
+    const idPaciente = localStorage.getItem('idPaciente');
+    this.carregaPaciente(idPaciente);
   },
   methods: {
     formatDate(date) {
@@ -131,44 +87,26 @@ export default {
     async carregaPaciente(id) {
       const token = localStorage.getItem('token');
       const url = `https://api-koch.onrender.com/paciente/${id}`;
+      if (id == null) {
+        this.carregou = true;
+      }
+
       try {
         const response = await api.get(url, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
+
         this.pacienteChave = response.data;
       } catch (error) {
-        // console.log(error);
-      }
-    },
-    async verificarProntuario(id) {
-      const token = localStorage.getItem('token');
-      const url = `https://api-koch.onrender.com/prontuarioId/${id}`;
-      try {
-        const resposta = await api.get(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        this.prontuarioChave = true;
-        this.prontuarioInfo = resposta.data;
-
         this.isLoading = false;
-      } catch (error) {
-        this.prontuarioChave = false;
+        this.carregou = true;
+      } finally {
         this.isLoading = false;
       }
     },
 
-    exibir(paciente) {
-      const { id } = paciente;
-      this.$router.push({ name: 'ProntuarioPage', params: { id } });
-    },
-    adicionar(paciente) {
-      const { id } = paciente;
-      this.$router.push({ name: 'addProntuario', params: { id } });
-    },
     redirecionar(paciente) {
       const { id } = paciente;
       this.$router.push({ name: 'calendarioP', params: { id } });

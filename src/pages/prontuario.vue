@@ -106,9 +106,6 @@ export default {
     this.carregaPaciente(this.$route.params.id)
       .then(() => {
         this.verificarProntuario(this.$route.params.id);
-      })
-      .catch((error) => {
-        console.log(error);
       });
   },
   methods: {
@@ -127,7 +124,7 @@ export default {
         });
         this.pacienteChave = response.data;
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     },
     async verificarProntuario(id) {

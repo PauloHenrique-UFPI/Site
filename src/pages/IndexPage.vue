@@ -16,7 +16,7 @@
               <q-icon name="search" />
             </template>
           </q-input>
-          <div class="add" style="position: abs;" v-if="!isUser">
+          <div class="add" style="position: abs;" v-if="!isUser && !isAgente">
             <q-fab
 
             vertical-actions-align="right"
@@ -78,6 +78,22 @@
       </q-card>
     </q-dialog>
 
+    <q-dialog v-model="persistent" persistent transition-show="scale" transition-hide="scale">
+      <q-card class="bg-red-7 text-white" style="width: 300px">
+        <q-card-section>
+          <div class="text-h6">Falha na Exclusão</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          Não foi possível excluir a notícia. Tente novamente mais tarde.
+        </q-card-section>
+
+        <q-card-actions align="right" class="bg-white text-teal">
+          <q-btn flat label="OK" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
   </q-page>
 
 </template>
@@ -96,6 +112,7 @@ export default defineComponent({
       confirmacaoDeletar: false,
       indexExclusao: null,
       filtro: '',
+      persistent: false,
     };
   },
 
@@ -107,6 +124,11 @@ export default defineComponent({
     isUser() {
       const auth = localStorage.getItem('auth');
       return auth === 'user';
+    },
+
+    isAgente() {
+      const auth = localStorage.getItem('auth');
+      return auth === 'agente';
     },
     noticiasFiltradas() {
       return this.listaNoticias.filter((noticia) => {
@@ -125,7 +147,6 @@ export default defineComponent({
         this.listaNoticias = response.data.groups;
         this.isLoading = false;
       } catch (error) {
-        console.log(error);
         this.isLoading = false;
       }
     },
@@ -147,7 +168,6 @@ export default defineComponent({
     async executarExclusao() {
       const token = localStorage.getItem('token');
       if (this.indexExclusao !== null) {
-        console.log(token);
         try {
           await api.delete(`https://api-koch.onrender.com/delete-new/${this.id}`, {
             headers: {
@@ -156,7 +176,7 @@ export default defineComponent({
           });
           this.listaNoticias.splice(this.indexExclusao, 1);
         } catch (error) {
-          console.log(error);
+          this.persistent = true;
         }
 
         this.cancelarExclusao();

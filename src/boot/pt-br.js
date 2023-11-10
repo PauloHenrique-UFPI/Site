@@ -1,4 +1,4 @@
-import Quasar from 'quasar';
+import { Quasar } from 'quasar';
 
 const lang = {
   isoName: 'pt-br',

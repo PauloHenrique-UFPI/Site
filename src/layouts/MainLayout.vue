@@ -122,8 +122,8 @@ export default {
 <style scoped>
 /* Estilos específicos para o tema escuro */
 .dark-theme {
-  background-color: #373636;
-  color: #c6c6c6;
+  background-color: #000000;
+  color: #807e7e;
 }
 
 .logoff-button {

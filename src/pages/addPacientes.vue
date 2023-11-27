@@ -256,6 +256,18 @@ export default defineComponent({
       ],
     };
   },
+  computed: {
+    isUser() {
+      const auth = localStorage.getItem('auth');
+      return auth === 'user';
+    },
+  },
+
+  mounted() {
+    if (this.isUser) {
+      this.$router.push({ name: 'home' });
+    }
+  },
   methods: {
     clearImage() {
       this.img = null;
@@ -275,6 +287,7 @@ export default defineComponent({
           const novaData = new Date(`${partesData[0]}-${partesData[1]}-${partesData[2]}`);
           const dataFormatada = novaData.toISOString();
 
+          // Adicionar campos ao objeto FormData
           formData.append('nome', this.nome);
           formData.append('data_nasc', dataFormatada);
           formData.append('naturalidade', this.naturalidade);

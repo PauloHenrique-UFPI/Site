@@ -307,6 +307,18 @@ export default defineComponent({
 
     };
   },
+  computed: {
+    isUser() {
+      const auth = localStorage.getItem('auth');
+      return auth === 'user';
+    },
+  },
+
+  mounted() {
+    if (this.isUser) {
+      this.$router.push({ name: 'home' });
+    }
+  },
   methods: {
     async submitForm(event) {
       event.preventDefault();

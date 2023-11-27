@@ -140,6 +140,10 @@ export default defineComponent({
         });
         this.lista = response.data.groups;
         this.isLoading = false;
+
+        if (this.isUser) {
+          this.$router.push({ name: 'home' });
+        }
       } catch (error) {
         // eslint-disable-next-line no-console
         console.log(error);

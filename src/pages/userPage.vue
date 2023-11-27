@@ -1,133 +1,151 @@
 <template>
-  <div class="q-pa-md">
-    <q-card-actions align="right" class="bg-white text-teal">
-      <q-btn
-        type="submit"
-        :loading="submitting"
-        label="Adicionar Usuário"
-        class="q-mt-md"
-        color="teal"
-      />
-    </q-card-actions>
-    <q-table
-      flat bordered
-      title="Tabela de Usuários"
-      :rows="rows"
-      :columns="columns"
-      row-key="id"
-    >
-      <template v-slot:body="props">
-        <q-tr :props="props">
-          <q-td key="Id" :props="props">{{ props.row.id }}</q-td>
-          <q-td key="Nome" :props="props">{{ props.row.name }}</q-td>
-          <q-td key="Email" :props="props">{{ props.row.email }}</q-td>
-          <q-td key="Tipo" :props="props">{{ props.row.tipo }}</q-td>
-          <q-td>
-            <q-btn color="orange" @click="editRow(props.row)">Editar</q-btn>
-            <q-btn class="q-ml-md" color="red" @click="confirmDeleteRow(props.row)">Deletar</q-btn>
-          </q-td>
-        </q-tr>
-      </template>
-    </q-table>
+    <div class="q-pa-md">
+      <q-card-actions align="right" class="bg-white text-teal">
+        <q-btn
+          type="submit"
+          :loading="submitting"
+          @click="showAddDialog = true"
+          label="Adicionar Usuário"
+          class="q-mt-md"
+          color="teal"
 
-    <!-- Modal de Edição -->
-    <q-dialog v-model="showEditDialog">
-      <q-card class="my-card">
+        />
+      </q-card-actions>
+      <q-table
+        flat bordered
+        title="Tabela de Usuários"
+        :rows="rows"
+        :columns="columns"
+        row-key="id"
+      >
+        <template v-slot:body="props">
+          <q-tr :props="props">
+            <q-td key="id" :props="props">{{ props.row.id }}</q-td>
+            <q-td key="nome" :props="props">{{ props.row.nome }}</q-td>
+            <q-td key="email" :props="props">{{ props.row.email }}</q-td>
+            <q-td key="tipo" :props="props">{{ props.row.tipo }}</q-td>
+            <q-td>
+              <q-btn class="q-ml-md" color="red"
+               @click="confirmDeleteRow(props.row.id)">Deletar</q-btn>
+            </q-td>
+          </q-tr>
+        </template>
+      </q-table>
+
+      <!-- Modal de Edição -->
+      <!-- <q-dialog v-model="showEditDialog">
+        <q-card class="my-card">
+          <q-card-section>
+            <q-input
+              filled
+              v-model="selectedRow.nome"
+              label="Nome *"
+              lazy-rules
+              :rules="[ val => val && val.length > 0]"
+            />
+            <q-input
+              filled
+              v-model="selectedRow.email"
+              label="Email *"
+              lazy-rules
+              :rules="[ val => val && val.length > 0]"
+            />
+            <q-select
+              square filled
+              v-model="selectedRow.tipo"
+              :options="options"
+              label="Tipo *" />
+          </q-card-section>
+          <q-card-actions align="right">
+            <q-btn color="negative" label="Cancelar" @click="showEditDialog = false" />
+            <q-btn color="positive" label="Salvar" @click="saveRow" />
+          </q-card-actions>
+        </q-card>
+      </q-dialog> -->
+
+      <q-dialog v-model="showDeleteDialog">
+        <q-card>
+          <q-card-section>
+            Tem certeza de que deseja excluir este <strong>usuário</strong> ?
+          </q-card-section>
+          <q-card-actions align="right">
+            <q-btn color="negative" label="Cancelar" @click="closeDeleteDialog" />
+            <q-btn color="positive" label="Confirmar" @click="deleteRow" />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+
+      <q-dialog v-model="showAddDialog" maximized @close="clearFields">
+      <q-card class="my-card" style="max-width: 400px; max-height: 400px;">
+        <h4 align="center" style="padding: 2%;">Novo Usuário</h4>
         <q-card-section>
+          <!-- Campos de entrada para o novo usuário -->
           <q-input
-            filled
-            v-model="selectedRow.name"
-            label="Nome *"
-            lazy-rules
-            :rules="[ val => val && val.length > 0]"
-          />
+              filled
+              v-model="newUser.nome"
+              label="Nome *"
+              hint="Nome do Usuário"
+              lazy-rules
+              :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
+            />
+            <q-input
+              filled
+              v-model="newUser.email"
+              label="E-mail *"
+              hint="Email para login"
+              lazy-rules
+              :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
+            />
+            <q-input
+              filled
+              v-model="newUser.password"
+              label="Senha *"
+              hint="Senha para login"
+              lazy-rules
+              :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
+              type="password"
+            />
           <q-input
-            filled
-            v-model="selectedRow.email"
-            label="Email *"
-            lazy-rules
-            :rules="[ val => val && val.length > 0]"
-          />
+              filled
+              v-model="newUser.number"
+              label="Nº Telefone *"
+              hint="Qual o Número"
+              mask="(##) # ####-####"
+              class="campo"
+              :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
+              type="tel"
+            />
           <q-select
-            square filled
-            v-model="selectedRow.tipo"
-            :options="options"
-             label="Tipo *" />
-          <!-- Outros campos de edição -->
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn color="negative" label="Cancelar" @click="showEditDialog = false" />
-          <q-btn color="positive" label="Salvar" @click="saveRow" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+              filled
+              v-model="newUser.rule"
+              :options="options"
+              label="Tipo de Usuário *"
+              hint="Selecione na Lista"
+              :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
 
-    <q-dialog v-model="showDeleteDialog">
-      <q-card>
-        <q-card-section>
-          Tem certeza de que deseja excluir este <strong>usuário</strong> ?
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn color="negative" label="Cancelar" @click="closeDeleteDialog" />
-          <q-btn color="positive" label="Confirmar" @click="deleteRow" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+              />
 
-    <q-dialog v-model="showAddDialog">
-      <q-card class="my-card">
-        <q-card-section>
-          <q-input
+            <q-select
+            v-if="newUser.rule === 'user'"
             filled
-            v-model="newUser.name"
-            label="Nome *"
-            lazy-rules
-            :rules="[ val => val && val.length > 0]"
-          />
-          <q-input
-            filled
-            v-model="newUser.email"
-            label="Email *"
-            lazy-rules
-            :rules="[ val => val && val.length > 0]"
-          />
-          <q-input
-            filled
-            v-model="newUser.password"
-            label="Senha *"
-            type="password"
-            lazy-rules
-            :rules="[ val => val && val.length > 0]"
-          />
-          <q-input
-            filled
-            v-model="newUser.number"
-            label="Número *"
-            lazy-rules
-            :rules="[ val => val && val.length > 0]"
-          />
-          <q-input
-            filled
-            v-model="newUser.rule"
-            label="Regra *"
-            lazy-rules
-            :rules="[ val => val && val.length > 0]"
-          />
-          <q-input
-            filled
-            v-model="newUser.id_paciente"
-            label="ID do Paciente *"
-            lazy-rules
-            :rules="[ val => val && val.length > 0]"
-          />
+            v-model="newUser.idPaciente"
+            :options="options2"
+            label="Usuário Vinculado *"
+            hint="Selecione na Lista"
+            option-label="nome"
+            :option-value="getId"
+            />
+
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn color="negative" label="Cancelar" @click="showAddDialog = false" />
-          <q-btn color="positive" label="Adicionar" @click="addUser" />
+          <q-btn color="negative" label="Cancelar" @click="clearFieldsAndClose" />
+
+          <q-btn color="positive" label="Salvar" @click="submitForm" />
         </q-card-actions>
       </q-card>
     </q-dialog>
-  </div>
+    </div>
+
 </template>
 
 <script>
@@ -138,10 +156,35 @@ export default {
   setup() {
     const submitting = ref(false);
     const rows = ref([]);
+
+    const showAddDialog = ref(false);
+    const newUser = ref({
+      nome: '',
+      email: '',
+      password: '',
+      number: '',
+      rule: '',
+      idPaciente: null,
+    });
     const showEditDialog = ref(false);
     const showDeleteDialog = ref(false);
     const selectedRow = ref(null);
 
+    const clearFields = () => {
+      // Limpar os campos ao fechar a caixa de diálogo
+      newUser.value.nome = '';
+      newUser.value.email = '';
+      newUser.value.password = '';
+      newUser.value.number = '';
+      newUser.value.rule = '';
+      newUser.value.idPaciente = '';
+    };
+
+    const clearFieldsAndClose = () => {
+      // Limpar os campos e fechar a caixa de diálogo
+      clearFields();
+      showAddDialog.value = false;
+    };
     const editRow = (row) => {
       selectedRow.value = { ...row };
       showEditDialog.value = true;
@@ -186,18 +229,49 @@ export default {
 
         rows.value = groups.map((group) => ({
           id: group.id,
-          name: group.name,
+          nome: group.name,
           email: group.email,
           tipo: group.rule,
         }));
       } catch (error) {
-        // console.error('Erro ao carregar dados da API:', error);
+        // this.isLoading = false;
       }
     });
 
+    const submitForm = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const formData = new FormData();
+
+        formData.append('name', newUser.value.nome);
+        formData.append('email', newUser.value.email);
+        formData.append('number', newUser.value.number);
+        formData.append('password', newUser.value.password);
+        formData.append('rule', newUser.value.rule);
+
+        if (newUser.value.idPaciente !== '') {
+          formData.append('id_paciente', newUser.value.idPaciente.id);
+          console.log(newUser.value.idPaciente.id);
+        }
+
+        await api.post('https://api-koch.onrender.com/create-user', formData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        this.$router.push({ name: 'home' });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     return {
       submitting,
+      clearFieldsAndClose,
       rows,
+      showAddDialog,
+      newUser,
       showEditDialog,
       showDeleteDialog,
       selectedRow,
@@ -206,69 +280,69 @@ export default {
       confirmDeleteRow,
       closeDeleteDialog,
       deleteRow,
+      clearFields,
+      options: [
+        'adm', 'agente', 'user',
+      ],
+      submitForm,
     };
   },
+
+  computed: {
+    isUser() {
+      const auth = localStorage.getItem('auth');
+      return auth === 'user';
+    },
+    isAgente() {
+      const auth = localStorage.getItem('auth');
+      return auth === 'agente';
+    },
+    filteredOptions() {
+      const term = this.searchTerm.toLowerCase();
+      return this.options2.filter((option) => option.nome.toLowerCase().includes(term));
+    },
+  },
+
+  data() {
+    return {
+      searchTerm: '',
+      options2: [], // Suas opções fixas
+      selectedOption: null,
+    };
+  },
+
   mounted() {
-    // console.log(this.rows.data);
+    this.carregaPaciente();
+    if (this.isUser || this.isAgente) {
+      this.$router.push({ nome: 'home' });
+    }
   },
   methods: {
-    async submitForm(event) {
-      event.preventDefault();
-      if (this.titulo && this.prefacio && this.descricao && this.img) {
-        try {
-          const token = localStorage.getItem('token');
-          const formData = new FormData();
-          this.loading = true;
+    async carregaPaciente() {
+      const token = localStorage.getItem('token');
+      try {
+        const response = await api.get('https://api-koch.onrender.com/pacientes', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        this.options2 = response.data.groups;
 
-          formData.append('titulo', this.titulo);
-          formData.append('img', this.img);
-          formData.append('desc_curta', this.prefacio);
-          formData.append('desc_longa', this.descricao);
-
-          await api.post('https://api-koch.onrender.com/create-new', formData, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'multipart/form-data',
-            },
-          });
-
-          this.$router.push('/home');
-        } catch (error) {
-          this.persistent = true;
-          this.loading = false;
-        } finally {
-          this.loading = false;
+        if (this.isUser) {
+          this.$router.push({ nome: 'home' });
         }
-      } else {
-        this.missingFieldsDialog = true;
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(error);
       }
     },
-    // editRow(row) {
-    //   this.selectedRow = { ...row }; // Clona os dados da linha selecionada
-    //   this.showEditDialog = true;
-    // },
-    // saveRow() {
-    //   // Encontre a linha correspondente na matriz e atualize-a
-    //   const index = this.rows.findIndex((row) => row.id === this.selectedRow.id);
-    //   if (index !== -1) {
-    //     this.rows[index] = { ...this.selectedRow };
-    //   }
-    //   this.showEditDialog = false;
-    // },
-    // confirmDeleteRow(row) {
-    //   this.selectedRow = row;
-    //   this.showDeleteDialog = true;
-    // },
-    // closeDeleteDialog() {
-    //   this.showDeleteDialog = false;
-    // },
-    // deleteRow() {
-    //   const index = this.rows.findIndex((row) => row.id === this.selectedRow.id);
-    //   if (index !== -1) {
-    //     this.rows.splice(index, 1);
-    //   }
-    //   this.showDeleteDialog = false;
-    // },
+    selectOption(option) {
+      // Atualiza a opção selecionada
+      this.selectedOption = option;
+    },
+    getId(option) {
+      return option.id;
+    },
   },
 };
 </script>

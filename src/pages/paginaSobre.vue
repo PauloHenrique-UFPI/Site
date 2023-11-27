@@ -18,7 +18,6 @@
             <li>Passo 2: Em seguida navegue nas nossas funcionalides,Notícias,Pacientes.</li>
             <li>Passo 3: Dúvidas? Acesse nossa página sobre e desvende do nosso tutorial.</li>
             <li>Passo 4:Por fim, para entrar em contato acesse nossas redes sociais.</li>
-            <!-- Adicione mais passos conforme necessário -->
           </ul>
       </q-carousel-slide>
       <q-carousel-slide name="map" class="column no-wrap flex-center">
@@ -28,9 +27,9 @@
                 <div class="image-content">
                   <span class="overlay"></span>
                   <div class="card-image">
-                    <q-avatar style="width: 100%; height: 100%;">
+                    <!-- <q-avatar style="width: 100%; height: 100%;">
                       <img src="../assets/paulo.jpg" alt="" class="card-img" />
-                    </q-avatar>
+                    </q-avatar> -->
                   </div>
                 </div>
                 <div class="card-content">
@@ -53,9 +52,9 @@
                 <div class="image-content">
                   <span class="overlay"></span>
                   <div class="card-image">
-                    <q-avatar style="width: 100%; height: 100%;">
+                    <!-- <q-avatar style="width: 100%; height: 100%;">
                       <img src="../assets/dale.jpg" alt="" class="card-img" />
-                    </q-avatar>
+                    </q-avatar> -->
                   </div>
                 </div>
                 <div class="card-content">
@@ -79,9 +78,9 @@
                 <div class="image-content">
                   <span class="overlay"></span>
                   <div class="card-image">
-                    <q-avatar style="width: 100%; height: 100%;">
+                    <!-- <q-avatar style="width: 100%; height: 100%;">
                       <img src="../assets/pedro.jpeg.jpg" alt="" class="card-img" />
-                    </q-avatar>
+                    </q-avatar> -->
                   </div>
                 </div>
                 <div class="card-content">
@@ -100,6 +99,24 @@
                   </div>
                 </div>
               </div>
+              <div class="card">
+                <div class="card-content">
+                  <h2 class="name">Eduardo S.</h2>
+                <p class="description">Bacharelando em Sistemas de Informação CSHNB - Picos PI </p>
+                  <div class="social-links">
+                    <a href="https://www.linkedin.com/in/pedro-t%C4%97rcio-9ba204243/" target="_blank" rel="noopener noreferrer">
+                      <img src="../assets/linkedin.png" alt="Linkedin" />
+                    </a>
+                    <a href="https://github.com/pedrotercio14" target="_blank" rel="noopener noreferrer">
+                      <img src="../assets/github_PNG4.png" alt="GitHub" />
+                    </a>
+                <a href="mailto:pedrotercio30@gmail.com" target="_blank" rel="noopener noreferrer">
+                      <img src="../assets/gmail.png" alt="Gmail" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </q-carousel-slide>

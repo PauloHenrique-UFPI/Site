@@ -159,6 +159,24 @@ export default defineComponent({
       model: ref(null),
     };
   },
+
+  computed: {
+    isUser() {
+      const auth = localStorage.getItem('auth');
+      return auth === 'user';
+    },
+    isAgente() {
+      const auth = localStorage.getItem('auth');
+      return auth === 'agente';
+    },
+  },
+
+  mounted() {
+    if (this.isUser || this.isAgente) {
+      this.$router.push({ name: 'home' });
+    }
+  },
+
   methods: {
     async submitForm(event) {
       event.preventDefault();

@@ -26,6 +26,22 @@
             direction="up"
             >
               <q-fab-action  color="green" to="/addNoticias" icon="add" label="Add Noticia" />
+              <q-fab-action color="amber" @click="atualizarAtivo = !atualizarAtivo">
+                <template v-if="atualizarAtivo">
+                  <q-icon name="cancel" />
+                  Cancelar
+                </template>
+                <template v-else>
+                  <q-icon name="add" />
+                  Atualizar
+                </template>
+              </q-fab-action>
+              <!-- <q-fab-action
+                color="yellow"
+                @click="abrirUpNoticia"
+                icon="add"
+                label="Atualizar Noticia"
+              /> -->
               <q-fab-action color="red" @click="deletarAtivo = !deletarAtivo">
                 <template v-if="deletarAtivo">
                   <q-icon name="cancel" />
@@ -40,13 +56,17 @@
           </div>
           <div class="noticias">
             <div class="q-ma-md q-pa-md"
-            style="display: flex; flex-wrap: wrap; justify-content: center;">
+              style="display: flex; flex-wrap: wrap; justify-content: center;">
               <div v-for="(post, index) in noticiasFiltradas"
                 :key="index"
                 class="q-ma-sm"
-                style="flex-basis: 33.33%;">
-                <q-card class="card" @click="deletarAtivo ?
-                exibirConfirmacaoDeletar(post.id, index) : exibirNoticia(post)">
+                style="flex-basis: 33.33%;"
+                @click="selecionarNoticia(post)">
+                <q-card
+                class="card relative-position"
+                @click="deletarAtivo ? exibirConfirmacaoDeletar(post.id, index)
+                : atualizarAtivo ? abrirUpNoticia(post.id)
+                : exibirNoticia(post)">
                   <div class="titulo"> {{ post.titulo }} </div>
                   <q-img
                     :src="post.img"
@@ -54,11 +74,15 @@
                     class="img"
                   />
                   <div class="descricao"> {{ post.desc_curta }}</div>
+                  <!-- <q-btn
+                    v-if="!isUser && !isAgente"
+                    label="Selecionar"
+                    @click.stop="selecionarNoticia(post)"
+                  /> -->
                 </q-card>
             </div>
           </div>
-
-          </div>
+        </div>
         </div>
       </div>
 
@@ -72,7 +96,7 @@
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn label="Cancelar" color="primary" @click="cancelarExclusao" />
+          <q-btn label="Cancelar" color="grey" @click="cancelarExclusao" />
           <q-btn label="Confirmar" color="negative" @click="executarExclusao" />
         </q-card-actions>
       </q-card>
@@ -93,6 +117,54 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+    <q-dialog v-model="dialogAdicionarPedido" >
+            <q-card>
+              <q-card-section>
+                <h3 class="titulo-noticia">Atualizar notícia</h3>
+                    <q-input
+                    outlined
+                    v-model="titulo"
+                    label="Novo título *"
+                    :rules="[ val => val && val.length > 0 || 'Por favor digite um título']"
+                    />
+                    <q-input
+                    outlined
+                    v-model="prefacio"
+                    label="Novo préfacio *"
+                    :rules="[ val => val && val.length > 0 || 'Por favor digite um Préfacio']"
+                    />
+                    <q-file filled bottom-slots
+                    v-model="img"
+                    label="Imagem"
+                    counter accept="image/*"
+                    >
+                      <template v-slot:prepend>
+                        <q-icon name="cloud_upload" @click.stop.prevent />
+                      </template>
+                      <template v-slot:append>
+                        <q-icon name="close"
+                        @click.stop.prevent="model = null"
+                        class="cursor-pointer"
+                        />
+                      </template>
+
+                      <template v-slot:hint>
+                        Imagem para ser anexada a notica
+                      </template>
+                    </q-file>
+                    <q-input
+                    outlined
+                    v-model="descricao"
+                    label="Nova descrição *"
+                    :rules="[ val => val && val.length > 0 || 'Por favor digite um descrição']"
+                    />
+              </q-card-section>
+              <q-card-actions align="center">
+                <q-btn label="Cancelar" color="red" @click="fecharUpNoticia" />
+                <q-btn label="Adicionar" color="green" @click="submitFormUpNoticia" />
+              </q-card-actions>
+            </q-card>
+      </q-dialog>
 
   </q-page>
 
@@ -109,13 +181,20 @@ export default defineComponent({
       isLoading: true,
       listaNoticias: [],
       deletarAtivo: false,
+      atualizarAtivo: false,
       confirmacaoDeletar: false,
       indexExclusao: null,
       filtro: '',
       persistent: false,
+      dialogAdicionarPedido: false,
+      titulo: '',
+      prefacio: '',
+      img: null,
+      descricao: '',
+      noticiaSelecionada: null,
+      descLongaFormatada: '',
     };
   },
-
   mounted() {
     this.carregarNoticias();
   },
@@ -182,12 +261,74 @@ export default defineComponent({
         this.cancelarExclusao();
       }
     },
+    selecionarNoticia(post) {
+      this.noticiaSelecionadaId = post.id;
+      console.log(post.id);
+    },
 
     exibirNoticia(post) {
       const { id } = post;
       this.$router.push({ name: 'NoticiaPage', params: { id } });
     },
+    abrirUpNoticia(id) {
+      if (id) {
+        this.noticiaSelecionada = this.listaNoticias.find((noticia) => noticia.id === id);
 
+        if (this.noticiaSelecionada) {
+          this.noticiaSelecionada.descLongaFormatada = this.noticiaSelecionada.desc_longa.replace(/<[^>]*>/g, '');
+          this.titulo = this.noticiaSelecionada.titulo;
+          this.prefacio = this.noticiaSelecionada.desc_curta;
+          this.img = this.noticiaSelecionada.img;
+          this.descricao = this.noticiaSelecionada.descLongaFormatada;
+          this.dialogAdicionarPedido = true;
+        }
+      } else {
+        alert('ID da notícia não fornecido');
+      }
+    },
+    fecharUpNoticia() {
+      this.titulo = '';
+      this.prefacio = '';
+      this.img = null;
+      this.descricao = '';
+      this.noticiaSelecionada = null;
+      this.dialogAdicionarPedido = false;
+    },
+    async submitFormUpNoticia(event) {
+      event.preventDefault();
+      const token = localStorage.getItem('token');
+      const formData = new FormData();
+      this.loading = true;
+
+      if (this.titulo) {
+        formData.append('titulo', this.titulo);
+      }
+      if (this.img) {
+        formData.append('img', this.img);
+      }
+      if (this.prefacio) {
+        formData.append('desc_curta', this.prefacio);
+      }
+      if (this.descricao) {
+        formData.append('desc_longa', this.descricao);
+      }
+
+      if (this.noticiaSelecionadaId) {
+        await api.put(
+          `https://api-koch.onrender.com/alter-new/${this.noticiaSelecionadaId}`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'multipart/form-data',
+            },
+          },
+        );
+      }
+      this.dialogAdicionarPedido = false;
+      this.atualizarAtivo = false;
+      this.carregarNoticias();
+    },
   },
 });
 
@@ -247,6 +388,16 @@ export default defineComponent({
   border: 1px solid #ccc;
 
 }
+.titulo-noticia{
+    font-size: 24px;
+    font-family: 'Courier New';
+    font-weight: bold;
+    border: 5px solid #e90808;
+    border-radius: 10px;
+    color: #000000;
+    margin-bottom: 20px;
+    padding: 12px;
+  }
 .img{
   object-fit: cover; width: 200px; height: 200px;
 }

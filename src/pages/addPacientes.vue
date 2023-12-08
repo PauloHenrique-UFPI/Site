@@ -11,7 +11,10 @@
             @reset="onReset"
             class="q-gutter-md"
           >
-          <h4 class="campo"><q-icon name="edit" color="red" /> Dados Pessoais </h4>
+          <h4 class="campo">
+            <q-icon name="edit" color="red" />
+            {{ isUpdate ? 'Atualizar' : 'Adicionar' }} dados pessoais:
+          </h4>
 
             <q-input
               filled
@@ -186,11 +189,13 @@
   <q-dialog v-model="persistent" persistent transition-show="scale" transition-hide="scale">
       <q-card class="bg-red-7 text-white" style="width: 300px">
         <q-card-section>
-          <div class="text-h6 text-white">Falha ao criar Paciente</div>
+          <div class="text-h6 text-white">Falha ao
+            {{ isUpdate ? 'atualizar': 'criar' }} Paciente</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none text-white">
-          Não foi possível criar o novo Paciente. Tente novamente mais tarde.
+          Não foi possível {{ isUpdate ? 'atualizar o': 'criar o novo' }} Paciente.
+          Tente novamente mais tarde.
         </q-card-section>
 
         <q-card-actions align="center" class="bg-white text-teal">
@@ -245,6 +250,8 @@ export default defineComponent({
       loading: false,
       persistent: false,
       missingFieldsDialog: false,
+      PacienteId: null,
+      isUpdate: false,
     };
   },
   setup() {
@@ -252,7 +259,7 @@ export default defineComponent({
       model: ref(null),
       shape: ref('3'),
       options: [
-        'Picos', 'Vila Nova', 'Ipiranga', 'Outro',
+        'Picos', 'Vila Nova', 'Ipiranga', 'Oeiras', 'Outro',
       ],
     };
   },
@@ -266,6 +273,39 @@ export default defineComponent({
   mounted() {
     if (this.isUser) {
       this.$router.push({ name: 'home' });
+    }
+  },
+  async created() {
+    const token = localStorage.getItem('token');
+    this.PacienteId = (this.$route.params.id);
+    this.isUpdate = !!this.PacienteId;
+    if (this.isUpdate) {
+      try {
+        const response = await api.get(`https://api-koch.onrender.com/paciente/${this.PacienteId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const paciente = response.data;
+        this.nome = paciente.nome;
+        this.date = paciente.data_nasc;
+        this.nomeMae = paciente.nome_mae;
+        this.naturalidade = paciente.naturalidade;
+        this.profissao = paciente.profissao;
+        this.endereco = paciente.endereco;
+        this.municipio = paciente.municipio;
+        this.refencia = paciente.ponto_ref;
+        this.telefone = paciente.telefone;
+        this.forma = paciente.forma;
+        this.img = paciente.img_trat;
+        this.cartaoSus = paciente.cartao_sus;
+        this.sinan = paciente.n_sinan;
+        this.unidadeTratamento = paciente.unidade_tratamento;
+        this.unidadeCadastro = paciente.unidade_cad;
+        // this.date = paciente.date;
+      } catch (error) {
+        console.log('Paciente não encontrado', error);
+      }
     }
   },
   methods: {
@@ -304,13 +344,21 @@ export default defineComponent({
           formData.append('unidade_cad', this.unidadeCadastro);
           formData.append('img', this.img);
 
-          await api.post('/create-paciente', formData, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'multipart/form-data',
-            },
-          });
-
+          if (!this.isUpdate) {
+            await api.post('/create-paciente', formData, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data',
+              },
+            });
+          } else {
+            await api.puta(`/alter-paciente/${this.PacienteId}`, formData, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data',
+              },
+            });
+          }
           this.$router.push('/pacientes');
         } catch (error) {
           this.persistent = true;

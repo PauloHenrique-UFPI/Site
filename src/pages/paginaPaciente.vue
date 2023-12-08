@@ -12,7 +12,7 @@
           filled
           outlined
           class="search-bar2"
-          placeholder="Pesquisar notícias..."
+          placeholder="Pesquisar pacientes..."
         >
           <template v-slot:prepend>
             <q-icon name="search" />
@@ -31,6 +31,16 @@
           direction="up"
         >
           <q-fab-action color="green" to="/addPacientes" icon="add" label="Add Paciente" />
+          <q-fab-action color="amber" @click="atualizarAtivo = !atualizarAtivo">
+                <template v-if="atualizarAtivo">
+                  <q-icon name="cancel" />
+                  Cancelar
+                </template>
+                <template v-else>
+                  <q-icon name="add" />
+                  Atualizar
+                </template>
+              </q-fab-action>
           <q-fab-action color="red" @click="deletarAtivo = !deletarAtivo" v-if="!isAgente">
                 <template v-if="deletarAtivo">
                   <q-icon name="cancel" />
@@ -50,7 +60,9 @@
             flex; flex-wrap: wrap; justify-content: center;">
               <div v-for="(post, index) in pacienteFiltrados" :key="index" class="q-ma-sm my-card">
                 <q-card class="card2" @click="deletarAtivo ?
-                exibirConfirmacaoDeletar(post.id, index) : exibirNoticia(post)">
+                exibirConfirmacaoDeletar(post.id, index)
+                : atualizarAtivo ? abrirUpPaciente(post)
+                : exibirNoticia(post)">
                   <q-card-section horizontal>
                     <q-card-section class="q-pt-xs">
                       <div class="text q-mt-sm q-mb-xs"> {{ post.nome }} </div>
@@ -80,7 +92,7 @@
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn label="Cancelar" color="primary" @click="cancelarExclusao" />
+          <q-btn label="Cancelar" color="grey" @click="cancelarExclusao" />
           <q-btn label="Confirmar" color="negative" @click="executarExclusao" />
         </q-card-actions>
       </q-card>
@@ -103,7 +115,7 @@ export default defineComponent({
       confirmacaoDeletar: false,
       indexExclusao: null,
       filtro: '',
-
+      atualizarAtivo: false,
     };
   },
 
@@ -184,6 +196,10 @@ export default defineComponent({
     exibirNoticia(post) {
       const { id } = post;
       this.$router.push({ name: 'PacientePage', params: { id } });
+    },
+    abrirUpPaciente(post) {
+      const { id } = post;
+      this.$router.push({ name: 'addPaciente', params: { id } });
     },
 
   },

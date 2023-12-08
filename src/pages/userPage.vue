@@ -1,150 +1,156 @@
 <template>
-    <div class="q-pa-md">
-      <q-card-actions align="right" class="bg-white text-teal">
-        <q-btn
-          type="submit"
-          :loading="submitting"
-          @click="showAddDialog = true"
-          label="Adicionar Usuário"
-          class="q-mt-md"
-          color="teal"
-
-        />
-      </q-card-actions>
-      <q-table
-        flat bordered
-        title="Tabela de Usuários"
-        :rows="rows"
-        :columns="columns"
-        row-key="id"
-      >
-        <template v-slot:body="props">
-          <q-tr :props="props">
-            <q-td key="id" :props="props">{{ props.row.id }}</q-td>
-            <q-td key="nome" :props="props">{{ props.row.nome }}</q-td>
-            <q-td key="email" :props="props">{{ props.row.email }}</q-td>
-            <q-td key="tipo" :props="props">{{ props.row.tipo }}</q-td>
-            <q-td>
-              <q-btn class="q-ml-md" color="red"
-               @click="confirmDeleteRow(props.row.id)">Deletar</q-btn>
-            </q-td>
-          </q-tr>
-        </template>
-      </q-table>
-
-      <!-- Modal de Edição -->
-      <!-- <q-dialog v-model="showEditDialog">
-        <q-card class="my-card">
-          <q-card-section>
-            <q-input
-              filled
-              v-model="selectedRow.nome"
-              label="Nome *"
-              lazy-rules
-              :rules="[ val => val && val.length > 0]"
+    <q-page>
+      <div v-if="isLoading" class="loading-animation"></div>
+      <div v-else>
+        <div class="q-pa-md">
+          <q-card-actions align="right" class="bg-white text-teal">
+            <q-btn
+              type="submit"
+              :loading="submitting"
+              @click="showAddDialog = true"
+              label="Adicionar Usuário"
+              class="q-mt-md"
+              color="green"
             />
-            <q-input
-              filled
-              v-model="selectedRow.email"
-              label="Email *"
-              lazy-rules
-              :rules="[ val => val && val.length > 0]"
-            />
-            <q-select
-              square filled
-              v-model="selectedRow.tipo"
-              :options="options"
-              label="Tipo *" />
-          </q-card-section>
-          <q-card-actions align="right">
-            <q-btn color="negative" label="Cancelar" @click="showEditDialog = false" />
-            <q-btn color="positive" label="Salvar" @click="saveRow" />
+            <!-- <q-btn
+              type="submit"
+              :loading="submitting"
+              @click="showAddDialog = false"
+              label="Atualizar Usuário"
+              class="q-mt-md"
+              color="amber"
+            /> -->
           </q-card-actions>
-        </q-card>
-      </q-dialog> -->
-
-      <q-dialog v-model="showDeleteDialog">
-        <q-card>
-          <q-card-section>
-            Tem certeza de que deseja excluir este <strong>usuário</strong> ?
-          </q-card-section>
-          <q-card-actions align="right">
-            <q-btn color="negative" label="Cancelar" @click="closeDeleteDialog" />
-            <q-btn color="positive" label="Confirmar" @click="deleteRow" />
-          </q-card-actions>
-        </q-card>
-      </q-dialog>
-
-      <q-dialog v-model="showAddDialog" maximized @close="clearFields">
-      <q-card class="my-card" style="max-width: 400px; max-height: 400px;">
-        <h4 align="center" style="padding: 2%;">Novo Usuário</h4>
-        <q-card-section>
-          <!-- Campos de entrada para o novo usuário -->
-          <q-input
-              filled
-              v-model="newUser.nome"
-              label="Nome *"
-              hint="Nome do Usuário"
-              lazy-rules
-              :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
-            />
-            <q-input
-              filled
-              v-model="newUser.email"
-              label="E-mail *"
-              hint="Email para login"
-              lazy-rules
-              :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
-            />
-            <q-input
-              filled
-              v-model="newUser.password"
-              label="Senha *"
-              hint="Senha para login"
-              lazy-rules
-              :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
-              type="password"
-            />
-          <q-input
-              filled
-              v-model="newUser.number"
-              label="Nº Telefone *"
-              hint="Qual o Número"
-              mask="(##) # ####-####"
-              class="campo"
-              :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
-              type="tel"
-            />
-          <q-select
-              filled
-              v-model="newUser.rule"
-              :options="options"
-              label="Tipo de Usuário *"
-              hint="Selecione na Lista"
-              :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
-
-              />
-
-            <q-select
-            v-if="newUser.rule === 'user'"
-            filled
-            v-model="newUser.idPaciente"
-            :options="options2"
-            label="Usuário Vinculado *"
-            hint="Selecione na Lista"
-            option-label="nome"
-            :option-value="getId"
-            />
-
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn color="negative" label="Cancelar" @click="clearFieldsAndClose" />
-
-          <q-btn color="positive" label="Salvar" @click="submitForm" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-    </div>
+          <q-table
+            flat bordered
+            title="Tabela de Usuários"
+            :rows="rows"
+            :columns="columns"
+            row-key="id"
+          >
+            <template v-slot:body="props">
+              <q-tr :props="props">
+                <q-td key="id" :props="props">{{ props.row.id }}</q-td>
+                <q-td key="nome" :props="props">{{ props.row.nome }}</q-td>
+                <q-td key="email" :props="props">{{ props.row.email }}</q-td>
+                <q-td key="tipo" :props="props">{{ props.row.tipo }}</q-td>
+                <q-td>
+                  <q-btn class="q-ml-md" color="red"
+                   @click="confirmDeleteRow(props.row.id)">Deletar</q-btn>
+                   <q-btn class="q-ml-md" color="amber">Atualizar</q-btn>
+                </q-td>
+              </q-tr>
+            </template>
+          </q-table>
+          <!-- Modal de Edição -->
+          <!-- <q-dialog v-model="showEditDialog">
+            <q-card class="my-card">
+              <q-card-section>
+                <q-input
+                  filled
+                  v-model="selectedRow.nome"
+                  label="Nome *"
+                  lazy-rules
+                  :rules="[ val => val && val.length > 0]"
+                />
+                <q-input
+                  filled
+                  v-model="selectedRow.email"
+                  label="Email *"
+                  lazy-rules
+                  :rules="[ val => val && val.length > 0]"
+                />
+                <q-select
+                  square filled
+                  v-model="selectedRow.tipo"
+                  :options="options"
+                  label="Tipo *" />
+              </q-card-section>
+              <q-card-actions align="right">
+                <q-btn color="negative" label="Cancelar" @click="showEditDialog = false" />
+                <q-btn color="positive" label="Salvar" @click="saveRow" />
+              </q-card-actions>
+            </q-card>
+          </q-dialog> -->
+          <q-dialog v-model="showDeleteDialog">
+            <q-card>
+              <q-card-section>
+                Tem certeza de que deseja excluir este <strong>usuário</strong> ?
+              </q-card-section>
+              <q-card-actions align="right">
+                <q-btn color="negative" label="Cancelar" @click="closeDeleteDialog" />
+                <q-btn color="positive" label="Confirmar" @click="deleteRow" />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+          <q-dialog v-model="showAddDialog" maximized @close="clearFields">
+          <q-card class="my-card" style="max-width: 400px; max-height: 400px;">
+            <h4 align="center" style="padding: 2%;">Novo Usuário</h4>
+            <q-card-section>
+              <!-- Campos de entrada para o novo usuário -->
+              <q-input
+                  filled
+                  v-model="newUser.nome"
+                  label="Nome *"
+                  hint="Nome do Usuário"
+                  lazy-rules
+                  :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
+                />
+                <q-input
+                  filled
+                  v-model="newUser.email"
+                  label="E-mail *"
+                  hint="Email para login"
+                  lazy-rules
+                  :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
+                />
+                <q-input
+                  filled
+                  v-model="newUser.password"
+                  label="Senha *"
+                  hint="Senha para login"
+                  lazy-rules
+                  :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
+                  type="password"
+                />
+              <q-input
+                  filled
+                  v-model="newUser.number"
+                  label="Nº Telefone *"
+                  hint="Qual o Número"
+                  mask="(##) # ####-####"
+                  class="campo"
+                  :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
+                  type="tel"
+                />
+              <q-select
+                  filled
+                  v-model="newUser.rule"
+                  :options="options"
+                  label="Tipo de Usuário *"
+                  hint="Selecione na Lista"
+                  :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
+                  />
+                <q-select
+                v-if="newUser.rule === 'user'"
+                filled
+                v-model="newUser.idPaciente"
+                :options="options2"
+                label="Usuário Vinculado *"
+                hint="Selecione na Lista"
+                option-label="nome"
+                :option-value="getId"
+                />
+            </q-card-section>
+            <q-card-actions align="right">
+              <q-btn color="negative" label="Cancelar" @click="clearFieldsAndClose" />
+              <q-btn color="positive" label="Salvar" @click="submitForm" />
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
+        </div>
+      </div>
+    </q-page>
 
 </template>
 
@@ -156,6 +162,7 @@ export default {
   setup() {
     const submitting = ref(false);
     const rows = ref([]);
+    const isLoading = ref(true);
 
     const showAddDialog = ref(false);
     const newUser = ref({
@@ -224,6 +231,7 @@ export default {
             'Content-Type': 'multipart/form-data',
           },
         });
+        isLoading.value = false;
         // console.log(response);
         const { groups } = response.data;
 
@@ -234,6 +242,7 @@ export default {
           tipo: group.rule,
         }));
       } catch (error) {
+        isLoading.value = false;
         // this.isLoading = false;
       }
     });
@@ -275,6 +284,7 @@ export default {
       showEditDialog,
       showDeleteDialog,
       selectedRow,
+      isLoading,
       editRow,
       saveRow,
       confirmDeleteRow,
@@ -346,3 +356,20 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+  .loading-animation {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 100px;
+    flex-wrap: wrap;
+    justify-content: center;
+    border: 5px solid #ccc;
+    border-top-color: #e90808;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+  }
+</style>

@@ -27,9 +27,9 @@
                 <div class="image-content">
                   <span class="overlay"></span>
                   <div class="card-image">
-                    <!-- <q-avatar style="width: 100%; height: 100%;">
+                    <q-avatar style="width: 100%; height: 100%;">
                       <img src="../assets/paulo.jpg" alt="" class="card-img" />
-                    </q-avatar> -->
+                    </q-avatar>
                   </div>
                 </div>
                 <div class="card-content">
@@ -52,9 +52,9 @@
                 <div class="image-content">
                   <span class="overlay"></span>
                   <div class="card-image">
-                    <!-- <q-avatar style="width: 100%; height: 100%;">
+                    <q-avatar style="width: 100%; height: 100%;">
                       <img src="../assets/dale.jpg" alt="" class="card-img" />
-                    </q-avatar> -->
+                    </q-avatar>
                   </div>
                 </div>
                 <div class="card-content">
@@ -78,9 +78,9 @@
                 <div class="image-content">
                   <span class="overlay"></span>
                   <div class="card-image">
-                    <!-- <q-avatar style="width: 100%; height: 100%;">
+                    <q-avatar style="width: 100%; height: 100%;">
                       <img src="../assets/pedro.jpeg.jpg" alt="" class="card-img" />
-                    </q-avatar> -->
+                    </q-avatar>
                   </div>
                 </div>
                 <div class="card-content">
@@ -100,17 +100,25 @@
                 </div>
               </div>
               <div class="card">
+                <div class="image-content">
+                  <span class="overlay"></span>
+                  <div class="card-image">
+                    <q-avatar style="width: 100%; height: 100%;">
+                      <img src="../assets/dudu.jpeg" alt="" class="card-img" />
+                    </q-avatar>
+                  </div>
+                </div>
                 <div class="card-content">
                   <h2 class="name">Eduardo S.</h2>
                 <p class="description">Bacharelando em Sistemas de Informação CSHNB - Picos PI </p>
                   <div class="social-links">
-                    <a href="https://www.linkedin.com/in/pedro-t%C4%97rcio-9ba204243/" target="_blank" rel="noopener noreferrer">
+                    <a href="https://www.linkedin.com/in/eduardo-de-sousa-3a02a2254" target="_blank" rel="noopener noreferrer">
                       <img src="../assets/linkedin.png" alt="Linkedin" />
                     </a>
-                    <a href="https://github.com/pedrotercio14" target="_blank" rel="noopener noreferrer">
+                    <a href="https://github.com/eduardosousaa" target="_blank" rel="noopener noreferrer">
                       <img src="../assets/github_PNG4.png" alt="GitHub" />
                     </a>
-                <a href="mailto:pedrotercio30@gmail.com" target="_blank" rel="noopener noreferrer">
+                <a href="mailto:eduardosousa@ufpi.edu" target="_blank" rel="noopener noreferrer">
                       <img src="../assets/gmail.png" alt="Gmail" />
                     </a>
                   </div>
@@ -154,12 +162,13 @@ export default defineComponent({
 <style scoped>
 .card-wrapper {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
 }
 
 .card {
   display: flex;
+  height: 380px;
   flex-direction: column;
   align-items: center;
   background-color: #fff;

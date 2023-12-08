@@ -25,7 +25,7 @@ const routes = [
         path: '/addNoticias', name: 'addNoticia', component: () => import('pages/addNoticias.vue'), beforeEnter: authGuard,
       },
       {
-        path: '/addPacientes', name: 'addPaciente', component: () => import('pages/addPacientes.vue'), beforeEnter: authGuard,
+        path: '/addPacientes/:id?', name: 'addPaciente', component: () => import('pages/addPacientes.vue'), beforeEnter: authGuard,
       },
       {
         path: '/noticia/:id',

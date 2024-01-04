@@ -7,16 +7,13 @@
           @reset="onReset"
           class="q-gutter-md"
         >
-          <h2 style="text-align: center;">Login</h2>
+        <div class="d-flex flex-center text-center q-mb-md">
+        <q-avatar size="100px" class="flex-center">
+            <img src="../assets/logo.png" alt="Logo">
+          </q-avatar>
+        </div>
+          <h6>Por favor digite seu email para recuperar sua senha: </h6>
           <q-input rounded outlined v-model="username" label="E-mail" :readonly="loading" />
-
-          <q-input rounded outlined v-model="password" @keyup.enter="submitForm"
-          type="password" label="Senha" :readonly="loading"/>
-          <div class="q-gutter-md q-mt-md q-mb-md q-flex q-items-end">
-            <router-link to="/recuperar" class="text-primary">
-              Esqueceu a senha?
-            </router-link>
-          </div>
           <div class="card0">
             <q-btn
               unelevated
@@ -45,7 +42,7 @@
       </q-card-section>
 
       <q-card-section class="q-pt-none text-white">
-        Existem campos obrigatórios que devem ser preenchidos.
+        Existem campos obrigatórios que devem ser preenchidos de forma correta: exemplo@email.com.
       </q-card-section>
 
       <q-card-actions align="center" class="bg-white text-teal">
@@ -57,15 +54,31 @@
   <q-dialog v-model="persistent" persistent transition-show="scale" transition-hide="scale">
       <q-card class="bg-red-7 text-white" style="width: 300px">
         <q-card-section>
-          <div class="text-h6 text-white">Falha de autenticação</div>
+          <div class="text-h6 text-white">Falha em enviar Email</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none text-white">
-          Não foi possível fazer login. Tente novamente mais tarde.
+          Não foi possível Enviar o Email para redefinicão de senha.
         </q-card-section>
 
         <q-card-actions align="center" class="bg-white text-teal">
           <q-btn flat label="OK" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model="notifyOK" persistent transition-show="scale" transition-hide="scale">
+      <q-card class="bg-green-7 text-white" style="width: 300px">
+        <q-card-section>
+          <div class="text-h6 text-white">Email para redifinição enviado</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none text-white">
+          Por favor, verifique sua caixa de e-mail para prosseguir.
+        </q-card-section>
+
+        <q-card-actions align="center" class="bg-white text-teal">
+          <q-btn flat label="OK" @click="redirecionarParaLogin" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -76,6 +89,7 @@
 <script>
 import { api } from 'boot/axios';
 import { QSpinner } from 'quasar';
+import validator from 'validator';
 
 export default {
   name: 'login_',
@@ -85,10 +99,10 @@ export default {
   data() {
     return {
       username: '',
-      password: '',
       loading: false,
       showButton: true,
       persistent: false,
+      notifyOK: false,
       missingFieldsDialog: false,
     };
   },
@@ -96,26 +110,18 @@ export default {
     async submitForm(event) {
       event.preventDefault();
 
-      if (this.username && this.password) {
+      if (validator.isEmail(this.username)) {
         try {
           this.loading = true;
           this.showButton = false;
 
           const payload = {
             email: this.username,
-            password: this.password,
           };
 
-          const response = await api.post('https://api-koch.onrender.com/login', payload);
-          const { token } = response.data;
-          const { rule } = response.data;
-          const { idPaciente } = response.data;
+          await api.post('http://localhost:3000/esqueci', payload);
 
-          localStorage.setItem('token', token);
-          localStorage.setItem('auth', rule);
-          localStorage.setItem('idPaciente', idPaciente);
-
-          this.$router.push('/home');
+          this.notifyOK = true;
         } catch (error) {
           this.persistent = true;
         } finally {
@@ -125,6 +131,9 @@ export default {
       } else {
         this.missingFieldsDialog = true;
       }
+    },
+    redirecionarParaLogin() {
+      window.location.href = '/';
     },
   },
 };

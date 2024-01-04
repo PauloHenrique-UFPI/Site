@@ -37,7 +37,7 @@
                   Cancelar
                 </template>
                 <template v-else>
-                  <q-icon name="add" />
+                  <q-icon name="edit" />
                   Atualizar
                 </template>
               </q-fab-action>

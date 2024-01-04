@@ -101,7 +101,6 @@
               mask="(##) # ####-####"
               class="campo"
               :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
-              type="tel"
             />
             <h4 class="campo"><q-icon name="edit" color="red" /> SUS </h4>
             <div class="">
@@ -352,7 +351,7 @@ export default defineComponent({
               },
             });
           } else {
-            await api.puta(`/alter-paciente/${this.PacienteId}`, formData, {
+            await api.put(`/alter-paciente/${this.PacienteId}`, formData, {
               headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data',

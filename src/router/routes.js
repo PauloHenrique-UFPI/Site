@@ -69,6 +69,13 @@ const routes = [
     component: LoginLayout,
     children: [
       { path: '', name: 'login_', component: LoginPage },
+      { path: '/recuperar', name: 'recuperar', component: () => import('pages/recuperacao.vue') },
+      {
+        path: '/novaSenha/:token',
+        name: 'novaSenha',
+        component: () => import('pages/novaSenha.vue'),
+        props: true,
+      },
     ],
   },
 

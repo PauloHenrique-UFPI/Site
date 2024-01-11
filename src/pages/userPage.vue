@@ -12,20 +12,13 @@
               class="q-mt-md"
               color="green"
             />
-            <!-- <q-btn
-              type="submit"
-              :loading="submitting"
-              @click="showAddDialog = false"
-              label="Atualizar Usuário"
-              class="q-mt-md"
-              color="amber"
-            /> -->
+
           </q-card-actions>
+
           <q-table
             flat bordered
             title="Tabela de Usuários"
             :rows="rows"
-            :columns="columns"
             row-key="id"
           >
             <template v-slot:body="props">
@@ -37,115 +30,102 @@
                 <q-td>
                   <q-btn class="q-ml-md" color="red"
                    @click="confirmDeleteRow(props.row.id)">Deletar</q-btn>
-                   <q-btn class="q-ml-md" color="amber">Atualizar</q-btn>
                 </q-td>
               </q-tr>
             </template>
           </q-table>
-          <!-- Modal de Edição -->
-          <!-- <q-dialog v-model="showEditDialog">
-            <q-card class="my-card">
-              <q-card-section>
-                <q-input
-                  filled
-                  v-model="selectedRow.nome"
-                  label="Nome *"
-                  lazy-rules
-                  :rules="[ val => val && val.length > 0]"
-                />
-                <q-input
-                  filled
-                  v-model="selectedRow.email"
-                  label="Email *"
-                  lazy-rules
-                  :rules="[ val => val && val.length > 0]"
-                />
-                <q-select
-                  square filled
-                  v-model="selectedRow.tipo"
-                  :options="options"
-                  label="Tipo *" />
-              </q-card-section>
-              <q-card-actions align="right">
-                <q-btn color="negative" label="Cancelar" @click="showEditDialog = false" />
-                <q-btn color="positive" label="Salvar" @click="saveRow" />
-              </q-card-actions>
-            </q-card>
-          </q-dialog> -->
           <q-dialog v-model="showDeleteDialog">
             <q-card>
-              <q-card-section>
+              <template v-if="!loadingAdd">
+                <q-card-section>
                 Tem certeza de que deseja excluir este <strong>usuário</strong> ?
+                </q-card-section>
+                <q-card-actions align="right">
+                  <q-btn color="negative" label="Cancelar" @click="closeDeleteDialog" />
+                  <q-btn color="positive" label="Confirmar" @click="deleteRow" />
+                </q-card-actions>
+              </template>
+
+              <template v-else>
+              <q-card-section align="center">
+                <q-spinner :size="50" color="red" />
               </q-card-section>
-              <q-card-actions align="right">
-                <q-btn color="negative" label="Cancelar" @click="closeDeleteDialog" />
-                <q-btn color="positive" label="Confirmar" @click="deleteRow" />
-              </q-card-actions>
+            </template>
+
             </q-card>
           </q-dialog>
           <q-dialog v-model="showAddDialog" maximized @close="clearFields">
-          <q-card class="my-card" style="max-width: 400px; max-height: 400px;">
-            <h4 align="center" style="padding: 2%;">Novo Usuário</h4>
-            <q-card-section>
-              <!-- Campos de entrada para o novo usuário -->
-              <q-input
-                  filled
-                  v-model="newUser.nome"
-                  label="Nome *"
-                  hint="Nome do Usuário"
-                  lazy-rules
-                  :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
-                />
+          <q-card class="my-card" style="max-width: 450px; max-height: 520px;">
+            <template v-if="!loadingAdd">
+              <h4 align="center">Novo Usuário</h4>
+              <q-card-section>
+
                 <q-input
-                  filled
-                  v-model="newUser.email"
-                  label="E-mail *"
-                  hint="Email para login"
-                  lazy-rules
-                  :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
-                />
+                    filled
+                    v-model="newUser.nome"
+                    label="Nome *"
+                    hint="Nome do Usuário"
+                    lazy-rules
+                    :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
+                  />
+                  <q-input
+                    filled
+                    v-model="newUser.email"
+                    label="E-mail *"
+                    hint="Email para login"
+                    lazy-rules
+                    :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
+                  />
+                  <q-input
+                    filled
+                    v-model="newUser.password"
+                    label="Senha *"
+                    hint="Senha para login"
+                    lazy-rules
+                    :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
+                    type="password"
+                  />
                 <q-input
-                  filled
-                  v-model="newUser.password"
-                  label="Senha *"
-                  hint="Senha para login"
-                  lazy-rules
-                  :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
-                  type="password"
-                />
-              <q-input
-                  filled
-                  v-model="newUser.number"
-                  label="Nº Telefone *"
-                  hint="Qual o Número"
-                  mask="(##) # ####-####"
-                  class="campo"
-                  :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
-                  type="tel"
-                />
-              <q-select
-                  filled
-                  v-model="newUser.rule"
-                  :options="options"
-                  label="Tipo de Usuário *"
-                  hint="Selecione na Lista"
-                  :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
+                    filled
+                    v-model="newUser.number"
+                    label="Nº Telefone *"
+                    hint="Qual o Número"
+                    mask="(##) # ####-####"
+                    class="campo"
+                    :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
+                    type="tel"
                   />
                 <q-select
-                v-if="newUser.rule === 'user'"
-                filled
-                v-model="newUser.idPaciente"
-                :options="options2"
-                label="Usuário Vinculado *"
-                hint="Selecione na Lista"
-                option-label="nome"
-                :option-value="getId"
-                />
-            </q-card-section>
-            <q-card-actions align="right">
-              <q-btn color="negative" label="Cancelar" @click="clearFieldsAndClose" />
-              <q-btn color="positive" label="Salvar" @click="submitForm" />
-            </q-card-actions>
+                    filled
+                    v-model="newUser.rule"
+                    :options="options"
+                    label="Tipo de Usuário *"
+                    hint="Selecione na Lista"
+                    :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
+                    />
+                  <q-select
+                  v-if="newUser.rule === 'user'"
+                  filled
+                  v-model="newUser.idPaciente"
+                  :options="options2"
+                  label="Usuário Vinculado *"
+                  hint="Selecione na Lista"
+                  option-label="nome"
+                  :option-value="getId"
+                  />
+              </q-card-section>
+              <q-card-actions align="right">
+                <q-btn color="negative" label="Cancelar" @click="clearFieldsAndClose" />
+                <q-btn color="positive" label="Salvar" @click="submitForm" />
+              </q-card-actions>
+            </template>
+
+            <template v-else>
+              <q-card-section align="center">
+                <q-spinner :size="120" color="red" />
+              </q-card-section>
+            </template>
+
           </q-card>
         </q-dialog>
         </div>
@@ -163,8 +143,12 @@ export default {
     const submitting = ref(false);
     const rows = ref([]);
     const isLoading = ref(true);
+    const loadingAdd = ref(false);
 
     const showAddDialog = ref(false);
+    const showDialogErro = ref(false);
+    const showDialogOK = ref(false);
+
     const newUser = ref({
       nome: '',
       email: '',
@@ -173,12 +157,10 @@ export default {
       rule: '',
       idPaciente: null,
     });
-    const showEditDialog = ref(false);
     const showDeleteDialog = ref(false);
     const selectedRow = ref(null);
 
     const clearFields = () => {
-      // Limpar os campos ao fechar a caixa de diálogo
       newUser.value.nome = '';
       newUser.value.email = '';
       newUser.value.password = '';
@@ -188,21 +170,8 @@ export default {
     };
 
     const clearFieldsAndClose = () => {
-      // Limpar os campos e fechar a caixa de diálogo
       clearFields();
       showAddDialog.value = false;
-    };
-    const editRow = (row) => {
-      selectedRow.value = { ...row };
-      showEditDialog.value = true;
-    };
-
-    const saveRow = () => {
-      const index = rows.value.findIndex((row) => row.id === selectedRow.value.id);
-      if (index !== -1) {
-        rows.value[index] = { ...selectedRow.value };
-      }
-      showEditDialog.value = false;
     };
 
     const confirmDeleteRow = (row) => {
@@ -214,10 +183,32 @@ export default {
       showDeleteDialog.value = false;
     };
 
-    const deleteRow = () => {
-      const index = rows.value.findIndex((row) => row.id === selectedRow.value.id);
+    const deleteRow = async () => {
+      loadingAdd.value = true;
+      const index = rows.value.findIndex((row) => row.id === selectedRow.value);
+      const token = localStorage.getItem('token');
       if (index !== -1) {
         rows.value.splice(index, 1);
+        try {
+          const response = await api.delete(`/delete-user/${selectedRow.value}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          const { groups } = response.data;
+
+          rows.value = groups.map((group) => ({
+            id: group.id,
+            nome: group.name,
+            email: group.email,
+            tipo: group.rule,
+          }));
+        } catch (error) {
+          loadingAdd.value = false;
+        // this.isLoading = false;
+        } finally {
+          loadingAdd.value = false;
+        }
       }
       showDeleteDialog.value = false;
     };
@@ -225,10 +216,9 @@ export default {
     onMounted(async () => {
       const token = localStorage.getItem('token');
       try {
-        const response = await api.get('https://api-koch.onrender.com/contatos', {
+        const response = await api.get('/contatos', {
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data',
           },
         });
         isLoading.value = false;
@@ -249,6 +239,7 @@ export default {
 
     const submitForm = async () => {
       try {
+        loadingAdd.value = true;
         const token = localStorage.getItem('token');
         const formData = new FormData();
 
@@ -258,20 +249,20 @@ export default {
         formData.append('password', newUser.value.password);
         formData.append('rule', newUser.value.rule);
 
-        if (newUser.value.idPaciente !== '') {
+        if (newUser.value.rule === 'user') {
           formData.append('id_paciente', newUser.value.idPaciente.id);
-          console.log(newUser.value.idPaciente.id);
         }
-
-        await api.post('https://api-koch.onrender.com/create-user', formData, {
+        await api.post('/create-user', formData, {
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
         });
-        this.$router.push({ name: 'home' });
       } catch (error) {
         console.error(error);
+        loadingAdd.value = false;
+      } finally {
+        loadingAdd.value = false;
       }
     };
 
@@ -281,12 +272,9 @@ export default {
       rows,
       showAddDialog,
       newUser,
-      showEditDialog,
       showDeleteDialog,
       selectedRow,
       isLoading,
-      editRow,
-      saveRow,
       confirmDeleteRow,
       closeDeleteDialog,
       deleteRow,
@@ -295,6 +283,9 @@ export default {
         'adm', 'agente', 'user',
       ],
       submitForm,
+      showDialogErro,
+      showDialogOK,
+      loadingAdd,
     };
   },
 
@@ -307,24 +298,18 @@ export default {
       const auth = localStorage.getItem('auth');
       return auth === 'agente';
     },
-    filteredOptions() {
-      const term = this.searchTerm.toLowerCase();
-      return this.options2.filter((option) => option.nome.toLowerCase().includes(term));
-    },
   },
 
   data() {
     return {
-      searchTerm: '',
-      options2: [], // Suas opções fixas
-      selectedOption: null,
+      options2: [],
     };
   },
 
   mounted() {
     this.carregaPaciente();
     if (this.isUser || this.isAgente) {
-      this.$router.push({ nome: 'home' });
+      this.$router.push({ name: 'home' });
     }
   },
   methods: {
@@ -345,10 +330,6 @@ export default {
         // eslint-disable-next-line no-console
         console.log(error);
       }
-    },
-    selectOption(option) {
-      // Atualiza a opção selecionada
-      this.selectedOption = option;
     },
     getId(option) {
       return option.id;

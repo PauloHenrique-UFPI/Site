@@ -36,12 +36,7 @@
                   Atualizar
                 </template>
               </q-fab-action>
-              <!-- <q-fab-action
-                color="yellow"
-                @click="abrirUpNoticia"
-                icon="add"
-                label="Atualizar Noticia"
-              /> -->
+
               <q-fab-action color="red" @click="deletarAtivo = !deletarAtivo">
                 <template v-if="deletarAtivo">
                   <q-icon name="cancel" />
@@ -119,7 +114,8 @@
     </q-dialog>
     <q-dialog v-model="dialogAdicionarPedido" >
             <q-card>
-              <q-card-section>
+              <template v-if="!loadingAtualiza">
+                <q-card-section>
                 <h3 class="titulo-noticia">Atualizar notícia</h3>
                     <q-input
                     outlined
@@ -158,11 +154,18 @@
                     label="Nova descrição *"
                     :rules="[ val => val && val.length > 0 || 'Por favor digite um descrição']"
                     />
-              </q-card-section>
-              <q-card-actions align="center">
-                <q-btn label="Cancelar" color="red" @click="fecharUpNoticia" />
-                <q-btn label="Adicionar" color="green" @click="submitFormUpNoticia" />
-              </q-card-actions>
+                </q-card-section>
+                <q-card-actions align="center">
+                  <q-btn label="Cancelar" color="red" @click="fecharUpNoticia" />
+                  <q-btn label="Adicionar" color="green" @click="submitFormUpNoticia" />
+                </q-card-actions>
+              </template>
+              <template v-else>
+                <q-card-section align="center" class="items-center">
+                  <q-spinner :size="50" color="red" />
+                </q-card-section>
+              </template>
+
             </q-card>
       </q-dialog>
 
@@ -193,6 +196,7 @@ export default defineComponent({
       descricao: '',
       noticiaSelecionada: null,
       descLongaFormatada: '',
+      loadingAtualiza: false,
     };
   },
   mounted() {
@@ -295,39 +299,46 @@ export default defineComponent({
       this.dialogAdicionarPedido = false;
     },
     async submitFormUpNoticia(event) {
-      event.preventDefault();
-      const token = localStorage.getItem('token');
-      const formData = new FormData();
-      this.loading = true;
+      try {
+        this.loadingAtualiza = true;
+        event.preventDefault();
+        const token = localStorage.getItem('token');
+        const formData = new FormData();
 
-      if (this.titulo) {
-        formData.append('titulo', this.titulo);
-      }
-      if (this.img) {
-        formData.append('img', this.img);
-      }
-      if (this.prefacio) {
-        formData.append('desc_curta', this.prefacio);
-      }
-      if (this.descricao) {
-        formData.append('desc_longa', this.descricao);
-      }
+        if (this.titulo) {
+          formData.append('titulo', this.titulo);
+        }
+        if (this.img) {
+          formData.append('img', this.img);
+        }
+        if (this.prefacio) {
+          formData.append('desc_curta', this.prefacio);
+        }
+        if (this.descricao) {
+          formData.append('desc_longa', this.descricao);
+        }
 
-      if (this.noticiaSelecionadaId) {
-        await api.put(
-          `https://api-koch.onrender.com/alter-new/${this.noticiaSelecionadaId}`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'multipart/form-data',
+        if (this.noticiaSelecionadaId) {
+          await api.put(
+            `https://api-koch.onrender.com/alter-new/${this.noticiaSelecionadaId}`,
+            formData,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data',
+              },
             },
-          },
-        );
+          );
+        }
+        this.dialogAdicionarPedido = false;
+        this.atualizarAtivo = false;
+        this.carregarNoticias();
+      } catch (error) {
+        this.loadingAtualiza = false;
+        console.log(error);
+      } finally {
+        this.loadingAtualiza = false;
       }
-      this.dialogAdicionarPedido = false;
-      this.atualizarAtivo = false;
-      this.carregarNoticias();
     },
   },
 });

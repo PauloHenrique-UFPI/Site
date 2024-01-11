@@ -34,9 +34,9 @@
         <q-separator vertical inset class="q-mx-lg" />
 
         <div class="column items-center">
-          <q-avatar size="72px">
-            <img src="../assets/profile2.jpeg">
-          </q-avatar>
+          <q-btn icon="image_search" label="Marcação"
+          stack glossy color="blue" @click="abrirDialogo"/>
+          <!-- aqui !!!!!!!!!!!!! -->
 
           <div class="text-subtitle1 q-mt-md q-mb-xs"></div>
 
@@ -77,15 +77,86 @@
     </q-footer>
 
   </q-layout>
+
+  <q-dialog v-model="showDialog" persistent>
+    <q-card>
+      <template v-if="!loading">
+        <q-card-section class="items-center">
+          <div>
+        <q-item-label header align="center" class="custom-header-label">
+          Imagem para Marcação
+        </q-item-label>
+      </div>
+      <q-item-label align="center">
+        <h6>Por favor, esteja ciente de que:</h6>
+        <li>Apenas imagens de escarro devem ser enviadas</li>
+        <li>Faça o download da imagem quando disponível</li>
+        <li>É necessário esperar o processamento da imagem</li>
+      </q-item-label>
+      <q-file
+        filled
+        bottom-slots
+        v-model="model"
+        label="Imagem de Escarro"
+        :accept="acceptedFileTypes"
+        counter
+        style="margin-top: 10px;"
+      >
+        <template v-slot:prepend>
+          <q-icon name="cloud_upload" @click.stop.prevent />
+        </template>
+        <template v-slot:append>
+          <q-icon
+            name="close"
+            @click.stop.prevent="clearFile"
+            class="cursor-pointer"
+          />
+        </template>
+
+        <template v-slot:hint>
+          Tamanho da imagem
+        </template>
+      </q-file>
+        </q-card-section>
+        <q-card-actions align="center">
+        <q-btn label="Fechar" color="red" v-close-popup />
+        <q-btn label="Enviar" color="green" @click="envio" />
+      </q-card-actions>
+      </template>
+      <template v-else>
+        <q-card-section align="center" class="items-center">
+          <q-spinner :size="50" color="red" />
+        </q-card-section>
+      </template>
+
+    </q-card>
+  </q-dialog>
+
+  <q-dialog v-model="showImage" persistent>
+    <q-card>
+      <img v-if="showImage" :src="uploadedImageUrl" alt="Imagem Enviada" />
+      <q-card-actions align="center">
+        <q-btn label="Fechar" color="red" v-close-popup />
+      </q-card-actions>
+    </q-card>
+
+  </q-dialog>
+
 </template>
 
 <script>
 import { ref, watch } from 'vue';
+import { api } from 'boot/axios';
 
 export default {
   setup() {
     const rightDrawerOpen = ref(false);
     const darkMode = ref(false);
+    const showDialog = ref(false);
+    const model = ref(null);
+    const loading = ref(false);
+    const uploadedImageUrl = ref('');
+    const showImage = ref(false);
 
     watch(darkMode, (newVal) => {
       document.documentElement.classList.toggle('dark-theme', newVal);
@@ -98,11 +169,59 @@ export default {
       localStorage.removeItem('auth');
       window.location.href = '/';
     }
+    function abrirDialogo() {
+      showDialog.value = true;
+    }
+    function clearFile() {
+      model.value = null;
+    }
+    const envio = async () => {
+      try {
+        loading.value = true;
+        const formData = new FormData();
+        formData.append('file', model.value);
+        console.log(model);
+        const response = await api.post(
+          'http://154.56.41.138:5000/upload',
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+            responseType: 'arraybuffer',
+          },
+        );
 
+        if (response.status === 200) {
+          // Converte os dados binários para uma URL de objeto
+          const blob = new Blob([response.data], { type: 'image/png' });
+          const imageUrl = URL.createObjectURL(blob);
+
+          // Atualiza a variável e mostra a imagem
+          uploadedImageUrl.value = imageUrl;
+          showImage.value = true;
+        }
+        console.log(response);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        loading.value = false;
+      }
+    };
     return {
       rightDrawerOpen,
       darkMode,
       fazerLogoff,
+      showDialog,
+      abrirDialogo,
+      model,
+      acceptedFileTypes: 'image/*',
+      clearFile,
+      loading,
+      uploadedImageUrl,
+      showImage,
+      envio,
+
     };
   },
   computed: {
@@ -121,6 +240,30 @@ export default {
 
 <style scoped>
 /* Estilos específicos para o tema escuro */
+.loading {
+
+width: 100px;
+height: 100px;
+flex-wrap: wrap;
+justify-content: center;
+border: 5px solid #ccc;
+border-top-color: #e90808;
+border-radius: 50%;
+animation: spin 1s linear infinite;
+margin: 0 auto;
+
+}
+.custom-header-label {
+  font-size: 24px;
+  font-family: 'Courier New';
+  font-weight: bold;
+  padding: 10px;
+  border: 10px solid #f95d10;
+  background-color: #FFFF00;
+  border-radius: 10px;
+  color: #000000;
+  margin-bottom: 20px;
+}
 .dark-theme {
   background-color: #000000;
   color: #807e7e;

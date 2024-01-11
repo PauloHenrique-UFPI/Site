@@ -59,14 +59,16 @@
             <div class="q-ma-md q-pa-md" style="display:
             flex; flex-wrap: wrap; justify-content: center;">
               <div v-for="(post, index) in pacienteFiltrados" :key="index" class="q-ma-sm my-card">
-                <q-card class="card2" @click="deletarAtivo ?
+                <q-card class="card2" id="card2margin" @click="deletarAtivo ?
                 exibirConfirmacaoDeletar(post.id, index)
                 : atualizarAtivo ? abrirUpPaciente(post)
                 : exibirNoticia(post)">
                   <q-card-section horizontal>
                     <q-card-section class="q-pt-xs">
-                      <div class="text q-mt-sm q-mb-xs"> {{ post.nome }} </div>
-                      <div class="text-overline">{{ post.unidade_tratamento }}</div>
+                      <div class="text-medium text-subtitle2 text-red-7 q-mt-sm q-mb-xs">
+                        {{ post.nome }}
+                      </div>
+                      <div class="text-italic">{{ post.unidade_tratamento }}</div>
                       <div class="text-caption text-grey">
                         {{ post.profissao }}
                       </div>
@@ -86,8 +88,8 @@
       <q-card>
         <q-card-section>
 
-          <q-card-text>
-            Tem certeza de que deseja excluir esta notícia?
+          <q-card-text class="text-weight-medium text-subtitle1">
+            Tem certeza de que deseja excluir este paciente?
           </q-card-text>
         </q-card-section>
 
@@ -213,8 +215,8 @@ export default defineComponent({
 
 position: fixed;
 
-left:85%;
-top: 85%;
+left: 90%;
+top: 75%;
 
 }
 .page_noticias {
@@ -236,6 +238,11 @@ top: 85%;
 .card2:hover {
   background-color: #c9bebe; /* cor de fundo quando hover */
 }
+@media (max-width: 700px) {
+  .card2 {
+    margin-top: 50px;
+  }
+}
 
 .loading-animation {
 
@@ -253,7 +260,7 @@ margin: 0 auto;
 }
 .search-bar2 {
   position: fixed;
-  top: 14%;
+  top: 20%;
   right: 1%;
   z-index: 2;
   width: 300px;
@@ -266,6 +273,7 @@ margin: 0 auto;
   @media (max-width: 768px) {
   .search-bar2 {
     position: fixed;
+    margin-top: 40px;
     top: 20%;
     left: 50%;
     transform: translate(-50%, -50%);

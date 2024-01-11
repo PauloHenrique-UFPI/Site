@@ -5,10 +5,12 @@
 
       <q-toolbar>
         <q-toolbar-title>
-          <q-avatar>
-            <img alt="logo" src="../assets/logo.png">
-          </q-avatar>
-          TB Koch
+          <router-link to="/home" class="toolbar-title">
+            <q-avatar>
+              <img alt="logo" src="../assets/logo.png">
+            </q-avatar>
+            TB KOCH
+          </router-link>
         </q-toolbar-title>
 
         <div class="q-pa-md">
@@ -71,18 +73,19 @@
     <q-page-container>
       <router-view />
     </q-page-container>
-
-    <q-footer class="bg-negative text-white" height-hint="98">
-      <!-- <div> link e mais links depois</div> -->
-    </q-footer>
-
+    <FooterPage />
   </q-layout>
+
 </template>
 
 <script>
 import { ref, watch } from 'vue';
+import FooterPage from '../components/FooterPage.vue';
 
 export default {
+  components: {
+    FooterPage,
+  },
   setup() {
     const rightDrawerOpen = ref(false);
     const darkMode = ref(false);
@@ -120,6 +123,18 @@ export default {
 </script>
 
 <style scoped>
+
+.toolbar-title {
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  text-decoration: none;
+  transition: 0.2s opacity;
+}
+
+.toolbar-title:hover {
+  opacity: 0.8;
+}
+
 /* Estilos específicos para o tema escuro */
 .dark-theme {
   background-color: #000000;

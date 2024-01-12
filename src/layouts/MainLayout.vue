@@ -1,5 +1,8 @@
 <template>
   <q-layout view="hHh Lpr fFf" :class="{'dark-theme': darkMode}">
+    <head>
+      <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+    </head>
 
     <q-header elevated class="bg-negative text-white" height-hint="98">
 
@@ -193,11 +196,9 @@ export default {
         );
 
         if (response.status === 200) {
-          // Converte os dados binários para uma URL de objeto
           const blob = new Blob([response.data], { type: 'image/png' });
           const imageUrl = URL.createObjectURL(blob);
 
-          // Atualiza a variável e mostra a imagem
           uploadedImageUrl.value = imageUrl;
           showImage.value = true;
         }

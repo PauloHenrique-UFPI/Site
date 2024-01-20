@@ -226,7 +226,7 @@ export default defineComponent({
   methods: {
     async carregarNoticias() {
       try {
-        const response = await api.get('https://api-koch.onrender.com/noticias');
+        const response = await api.get('/noticias');
         this.listaNoticias = response.data.groups;
         this.isLoading = false;
       } catch (error) {

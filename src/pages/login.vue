@@ -106,7 +106,7 @@ export default {
             password: this.password,
           };
 
-          const response = await api.post('https://api-koch.onrender.com/login', payload);
+          const response = await api.post('/login', payload);
           const { token } = response.data;
           const { rule } = response.data;
           const { idPaciente } = response.data;

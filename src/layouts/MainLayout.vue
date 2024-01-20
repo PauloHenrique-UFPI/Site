@@ -76,7 +76,7 @@
     </q-page-container>
 
     <q-footer class="bg-negative text-white" height-hint="98">
-      <!-- <div> link e mais links depois</div> -->
+
     </q-footer>
 
   </q-layout>
@@ -185,7 +185,7 @@ export default {
         formData.append('file', model.value);
         console.log(model);
         const response = await api.post(
-          'http://154.56.41.138:5000/upload',
+          'https://hunterph.com.br/upload',
           formData,
           {
             headers: {

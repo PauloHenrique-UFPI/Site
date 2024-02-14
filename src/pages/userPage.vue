@@ -316,7 +316,7 @@ export default {
     async carregaPaciente() {
       const token = localStorage.getItem('token');
       try {
-        const response = await api.get('https://api-koch.onrender.com/pacientes', {
+        const response = await api.get('/pacientes', {
           headers: {
             Authorization: `Bearer ${token}`,
           },

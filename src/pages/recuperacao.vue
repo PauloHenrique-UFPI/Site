@@ -119,7 +119,7 @@ export default {
             email: this.username,
           };
 
-          await api.post('https://api-koch.onrender.com/esqueci', payload);
+          await api.post('/esqueci', payload);
 
           this.notifyOK = true;
         } catch (error) {

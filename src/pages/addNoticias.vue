@@ -191,7 +191,7 @@ export default defineComponent({
           formData.append('desc_curta', this.prefacio);
           formData.append('desc_longa', this.descricao);
 
-          await api.post('https://api-koch.onrender.com/create-new', formData, {
+          await api.post('/create-new', formData, {
             headers: {
               Authorization: `Bearer ${token}`,
               'Content-Type': 'multipart/form-data',

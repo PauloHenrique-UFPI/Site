@@ -85,7 +85,7 @@
       <q-card>
         <q-card-section>
 
-          <q-card-text>
+          <q-card-text class="text-weight-medium text-subtitle1">
             Tem certeza de que deseja excluir esta notícia?
           </q-card-text>
         </q-card-section>
@@ -156,7 +156,7 @@
                     />
                 </q-card-section>
                 <q-card-actions align="center">
-                  <q-btn label="Cancelar" color="red" @click="fecharUpNoticia" />
+                  <q-btn label="Cancelar" color="grey" @click="fecharUpNoticia" />
                   <q-btn label="Adicionar" color="green" @click="submitFormUpNoticia" />
                 </q-card-actions>
               </template>
@@ -360,14 +360,14 @@ export default defineComponent({
 .add{
   position: fixed;
 
-  left:85%;
-  top: 85%;
+  left:90%;
+  top: 75%;
   z-index: 2;
 
 }
 .search-bar {
   position: fixed;
-  top: 14%;
+  top: 20%;
   right: 1%;
   z-index: 2;
   width: 300px;
@@ -380,10 +380,17 @@ export default defineComponent({
   @media (max-width: 768px) {
   .search-bar {
     position: fixed;
+    margin-top: 40px;
     top: 20%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 2;
+  }
+}
+@media (max-width: 700px) {
+  .card {
+    margin-top: 40px;
+    height: 380px;
   }
 }
 
@@ -411,6 +418,12 @@ export default defineComponent({
   }
 .img{
   object-fit: cover; width: 200px; height: 200px;
+}
+
+@media (max-width: 700px) {
+  .img {
+    margin: 0px 20px;
+  }
 }
 .titulo{
   padding: 5%;

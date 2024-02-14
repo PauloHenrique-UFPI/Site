@@ -37,7 +37,7 @@ export default {
     },
     async carregaNoticia(id) {
       const token = localStorage.getItem('token');
-      const url = `https://api-koch.onrender.com/noticia/${id}`;
+      const url = `/noticia/${id}`;
       try {
         const response = await api.get(url, {
           headers: {

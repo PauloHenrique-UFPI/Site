@@ -344,7 +344,7 @@ export default defineComponent({
         formData.append('contatos_ident', this.contatos_ident);
         formData.append('paciente', this.$route.params.id);
 
-        await api.post('https://api-koch.onrender.com/create-prontuario', formData, {
+        await api.post('/create-prontuario', formData, {
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',

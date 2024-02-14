@@ -9,16 +9,26 @@
         class="rounded-borders"
       >
 
-        <!-- Novo slide para o tutorial -->
-        <q-carousel-slide name="tutorial" class="column no-wrap flex-center">
-          <h2 class="name">Tutorial</h2>
-          <p class="description">Aqui estão as instruções de como usar o site:</p>
-          <ul>
-            <li>Passo 1: Entre no nosso site, faça seu cadastro e em seguida efetue o Login.</li>
-            <li>Passo 2: Em seguida navegue nas nossas funcionalides,Notícias,Pacientes.</li>
-            <li>Passo 3: Dúvidas? Acesse nossa página sobre e desvende do nosso tutorial.</li>
-            <li>Passo 4:Por fim, para entrar em contato acesse nossas redes sociais.</li>
-          </ul>
+        <q-carousel-slide name="tutorial" class="custom-carousel-slide column no-wrap flex-center">
+          <h2 class="nameTitulo">Bem-vindo ao TB KOCH</h2>
+          <p class="sobre-content">
+            Seja muito bem vindo, somos um site inovador criado com o propósito
+            de auxiliar no diagnóstico precoce da tuberculose. <br>
+            Estamos empenhados em transformar a abordagem tradicional
+            de identificação desta doença, tornando o processo mais <br>eficiente
+            e acessível para todos. Nós, da equipe TB KOCH, estamos profundamente comprometidos
+            em fazer a diferença <br> na luta contra
+            a tuberculose. Acreditamos que, com a ajuda da
+            tecnologia e da inovação, podemos mudar o cenário atual <br> e proporcionar um futuro
+            mais saudável para todos.Convidamos você a explorar nosso site e descobrir
+            mais sobre nosso <br> projeto, seus benefícios e a tecnologia
+            inovadora que impulsiona nosso desenvolvimento.
+            Estamos entusiasmados com o <br>impacto positivo que nosso software pode ter
+            na luta contra a tuberculose. Agradecemos sua visita e interesse nesta iniciativa <br>
+            de grande importância. Junte-se a nós na busca por
+            um diagnóstico precoce e eficaz,
+            uma missão que pode salvar inúmeras <br> vidas. Seja parte desta mudança!
+          </p>
       </q-carousel-slide>
       <q-carousel-slide name="map" class="column no-wrap flex-center">
           <div class="q-mt-md text-center">
@@ -133,9 +143,10 @@
         <q-btn-toggle
           glossy
           v-model="slide"
+          toggle-color="red"
           :options="[
 
-             { label: 'Tutorial', value: 'tutorial' },
+             { label: 'Sobre', value: 'tutorial' },
              { label: 'Desenvolvedores', value: 'map' }
 
           ]"
@@ -160,6 +171,17 @@ export default defineComponent({
 </script>
 
 <style scoped>
+
+.sobre-content {
+  font-size: 18px;
+  padding: 10px;
+}
+@media (max-width: 1200px) {
+  .sobre-content {
+    font-size: 12px;
+    padding: 15px;
+  }
+}
 .card-wrapper {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -228,7 +250,15 @@ export default defineComponent({
 .name {
   font-size: 18px;
   font-weight: 500;
+  font-size: 25px;
+  font-weight: bold;
   margin: 10px 0;
+}
+.nameTitulo {
+  font-size: 25px;
+  font-weight: bold;
+  margin: 10px 0;
+  color: red
 }
 
 .description {

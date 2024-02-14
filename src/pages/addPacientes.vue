@@ -280,7 +280,7 @@ export default defineComponent({
     this.isUpdate = !!this.PacienteId;
     if (this.isUpdate) {
       try {
-        const response = await api.get(`https://api-koch.onrender.com/paciente/${this.PacienteId}`, {
+        const response = await api.get(`/paciente/${this.PacienteId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

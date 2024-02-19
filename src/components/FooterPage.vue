@@ -50,7 +50,7 @@ export default {
 .footer-page {
   border-top: 1px solid #333;
   height: auto; /* Ajuste a altura para auto para acomodar o conteúdo adicional */
-  position: absolute;
+  position: relative;
   width: 100%;
   flex-direction: column;
   justify-content: start;

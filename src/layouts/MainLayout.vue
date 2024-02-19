@@ -8,10 +8,6 @@
 
       <q-toolbar>
         <q-toolbar-title>
-          <q-avatar>
-            <img alt="logo" src="../assets/logo.png">
-          </q-avatar>
-          TB Koch
           <router-link to="/home" class="toolbar-title">
             <q-avatar>
               <img alt="logo" src="../assets/logo.png">
@@ -43,8 +39,7 @@
         <q-separator vertical inset class="q-mx-lg" />
 
         <div class="column items-center">
-          <q-btn icon="image_search" label="Marcação"
-          stack glossy color="blue" @click="abrirDialogo"/>
+
           <!-- aqui !!!!!!!!!!!!! -->
 
           <div class="text-subtitle1 q-mt-md q-mb-xs"></div>
@@ -88,70 +83,6 @@
     <FooterPage />
 
   </q-layout>
-
-  <q-dialog v-model="showDialog" persistent>
-    <q-card>
-      <template v-if="!loading">
-        <q-card-section class="items-center">
-          <div>
-        <q-item-label header align="center" class="custom-header-label">
-          Imagem para Marcação
-        </q-item-label>
-      </div>
-      <q-item-label align="center">
-        <h6>Por favor, esteja ciente de que:</h6>
-        <li>Apenas imagens de escarro devem ser enviadas</li>
-        <li>Faça o download da imagem quando disponível</li>
-        <li>É necessário esperar o processamento da imagem</li>
-      </q-item-label>
-      <q-file
-        filled
-        bottom-slots
-        v-model="model"
-        label="Imagem de Escarro"
-        :accept="acceptedFileTypes"
-        counter
-        style="margin-top: 10px;"
-      >
-        <template v-slot:prepend>
-          <q-icon name="cloud_upload" @click.stop.prevent />
-        </template>
-        <template v-slot:append>
-          <q-icon
-            name="close"
-            @click.stop.prevent="clearFile"
-            class="cursor-pointer"
-          />
-        </template>
-
-        <template v-slot:hint>
-          Tamanho da imagem
-        </template>
-      </q-file>
-        </q-card-section>
-        <q-card-actions align="center">
-        <q-btn label="Fechar" color="red" v-close-popup />
-        <q-btn label="Enviar" color="green" @click="envio" />
-      </q-card-actions>
-      </template>
-      <template v-else>
-        <q-card-section align="center" class="items-center">
-          <q-spinner :size="50" color="red" />
-        </q-card-section>
-      </template>
-
-    </q-card>
-  </q-dialog>
-
-  <q-dialog v-model="showImage" persistent>
-    <q-card>
-      <img v-if="showImage" :src="uploadedImageUrl" alt="Imagem Enviada" />
-      <q-card-actions align="center">
-        <q-btn label="Fechar" color="red" v-close-popup />
-      </q-card-actions>
-    </q-card>
-
-  </q-dialog>
 
 </template>
 

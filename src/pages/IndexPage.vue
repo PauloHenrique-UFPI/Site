@@ -360,7 +360,7 @@ export default defineComponent({
 .add{
   position: fixed;
 
-  left:90%;
+  left:85%;
   top: 75%;
   z-index: 2;
 

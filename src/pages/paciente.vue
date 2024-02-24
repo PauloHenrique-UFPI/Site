@@ -114,22 +114,28 @@
                 <q-list bordered>
                   <h6 style="color: orange; text-align: center;">Teste de Bacilos</h6>
                   <q-separator />
-                  <div v-for="(post, index) in listaExames"
-                  :key="index">
-                    <q-item>
-                    <q-item-section avatar>
-                      <q-avatar rounded>
-                        <img  :src="post.img">
-                      </q-avatar>
-                    </q-item-section>
-                    <q-item-section>
-                      {{ formatDatePublish(post.date) }} </q-item-section>
-                    <q-item-section>
-                      <q-btn outline color="primary"
-                      icon="image_search" @click="baixarImagem(post.img)" />
-                      <a :href="post.img" download>Download image</a>
-                     </q-item-section>
-                  </q-item>
+                  <div v-if="listaExames.length > 0">
+                    <div v-for="(post, index) in listaExames"
+                    :key="index">
+                      <q-item>
+                      <q-item-section avatar>
+                        <q-avatar rounded>
+                          <img  :src="post.img">
+                        </q-avatar>
+                      </q-item-section>
+                      <q-item-section>
+                        {{ formatDatePublish(post.date) }} </q-item-section>
+                      <q-item-section>
+
+                        <q-btn outline color="primary"
+                        icon="image_search" @click="baixarImagem(post.img)" />
+
+                      </q-item-section>
+                    </q-item>
+                    </div>
+                  </div>
+                  <div v-else>
+                      <p>Nenhum exame disponível no momento.</p>
                   </div>
 
                   <q-separator />
@@ -149,73 +155,59 @@
               </div>
 
               <div class="q-pa-md" style="max-width: 350px">
-                <q-list bordered>
-                  <h6 style="color: rgb(21, 152, 6); text-align: center;">Feedback do Paciente</h6>
-                  <q-separator />
-                  <div v-if="feedback.length > 0">
-                    <div v-for="(post, index) in listaExames"
-                  :key="index">
-                    <q-item>
-                    <q-item-section avatar>
-                      <q-avatar rounded>
-                        <img  :src="post.img">
-                      </q-avatar>
-                    </q-item-section>
-                    <q-item-section>
-                      {{ formatDatePublish(post.date) }} </q-item-section>
-                    <q-item-section>
-                      <q-btn outline color="primary"
-                      icon="image_search" @click="baixarImagem(post.img)" />
-                      <a :href="post.img" download>Download image</a>
-                     </q-item-section>
-                  </q-item>
-                  </div>
-                  </div>
-                  <div v-else>
+                <div v-if="prontuarioInfo">
+                  <q-card>
+                    <q-card-section>
+                      <ul class="medical-history">
+                        <div class="q-dialog-title"><strong></strong></div>
+                        <h6 style="color: blue; text-align: center;">Informações Complementares</h6>
+                          <div class="registro-item">
+                            <div class="registro-date"><strong>Tipo:</strong>
+                              {{ prontuarioInfo.tipo }}</div>
+                            <div class="registro-description"><strong>População Especifica:</strong>
+                              {{ prontuarioInfo.popu_especifica }}</div>
+                            <div class="registro-description"><strong>Beneficiario:</strong>
+                              {{ prontuarioInfo.beneficiario }}</div>
+                            <div class="registro-description"><strong>Tipo da doença:</strong>
+                              {{ prontuarioInfo.tipo_doenca }}</div>
+                            <div class="registro-description"><strong>Extrapulmonar:</strong>
+                              {{ prontuarioInfo.se_extrapulmonar }}</div>
+                            <div class="registro-description"><strong>Agravos:</strong>
+                              {{ prontuarioInfo.agravos }}</div>
+                            <div class="registro-description"><strong>Diagnostico:</strong>
+                              {{ prontuarioInfo.diagnostico }}</div>
+                            <div class="registro-description"><strong>Radiografia:</strong>
+                              {{ prontuarioInfo.radiografia }}</div>
+                            <div class="registro-description"><strong>HIV:</strong>
+                              {{ prontuarioInfo.hiv }}</div>
+                          </div>
 
-                    <p>Nenhum feedback disponível.</p>
-                  </div>
+                      </ul>
+                    </q-card-section>
 
-                  <q-separator />
-                  <q-card-actions align="center" class="bg-white text-teal">
+                  </q-card>
+                </div>
+
+                <div class="container" v-else>
                     <q-btn
-                    dark-percentage
-                    unelevated
-                    color="green"
-                    text-color="grey-9"
-                    @click="showDialog = !showDialog"
-                    icon="emoji_objects"
-                    style="width: 100px"
-                  />
-                  </q-card-actions>
-
-                </q-list>
+                      class="botao btn-fixed-width"
+                      color="red"
+                      label="Adicionar Dados Complementares"
+                      icon="add"
+                      @click="adicionar(pacienteChave)"
+                    />
+                </div>
               </div>
             </div>
 
           </q-carousel-slide>
         </q-carousel>
-        <div class="container" v-if="prontuarioChave">
-          <q-btn
-            class="botao btn-fixed-width"
-            color="red"
-            label="Visualizar Prontuário"
-            icon="assignment"
-            @click="showProntuarioDialog = true"
-          />
-        </div>
 
-        <div class="container" v-if="!prontuarioChave">
-          <q-btn
-            class="botao btn-fixed-width"
-            color="red"
-            label="Adicionar Prontuário"
-            icon="add"
-            @click="adicionar(pacienteChave)"
-          />
-        </div>
       </div>
 
+      <q-separator spaced inset vertical dark />
+
+      <div>TB Koch - 2024 </div>
       </div>
 
     <q-dialog v-model="showProntuarioDialog">
@@ -377,7 +369,7 @@
   </q-dialog>
 
 </template>
-1
+
 <script>
 import { api } from 'boot/axios';
 import { ref } from 'vue';
@@ -688,7 +680,6 @@ export default {
         this.mensagem = 'Não foi possivel carregar os Exames';
       }
     },
-
   },
 };
 </script>
@@ -696,6 +687,7 @@ export default {
 <style scoped>
 .carro {
   height: 100%;
+
 }
 .custom-separator {
   display: flex;

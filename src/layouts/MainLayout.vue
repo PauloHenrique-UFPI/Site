@@ -219,8 +219,8 @@ margin: 0 auto;
   margin-bottom: 20px;
 }
 .dark-theme {
-  background-color: #000000;
-  color: #807e7e;
+  background-color: #6b6565;
+  color: #000000;
 }
 
 .logoff-button {

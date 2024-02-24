@@ -52,12 +52,6 @@ const routes = [
         beforeEnter: authGuard,
       },
       {
-        path: '/calendario/:id',
-        name: 'calendarioP',
-        component: () => import('pages/calendarioP.vue'),
-        beforeEnter: authGuard,
-      },
-      {
         path: '/minhaFicha', name: 'minhaFicha', component: () => import('pages/minhaFicha'), beforeEnter: authGuard,
       },
 

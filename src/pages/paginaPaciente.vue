@@ -147,7 +147,7 @@ export default defineComponent({
     async carregaPaciente() {
       const token = localStorage.getItem('token');
       try {
-        const response = await api.get('https://api-koch.onrender.com/pacientes', {
+        const response = await api.get('/pacientes', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -182,7 +182,7 @@ export default defineComponent({
       const token = localStorage.getItem('token');
       if (this.indexExclusao !== null) {
         try {
-          await api.delete(`https://api-koch.onrender.com/delete-paciente/${this.id}`, {
+          await api.delete(`/delete-paciente/${this.id}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -215,9 +215,9 @@ export default defineComponent({
 
 position: fixed;
 
-left: 90%;
+left: 85%;
 top: 75%;
-
+z-index: 2;
 }
 .page_noticias {
   &__list {

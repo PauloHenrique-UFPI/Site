@@ -16,7 +16,7 @@
               <q-icon name="search" />
             </template>
           </q-input>
-          <div class="add" style="position: abs;" v-if="!isUser && !isAgente">
+          <div class="add" style="position: abs;" v-if="!isUser && !isAgente && !isMed">
             <q-fab
 
             vertical-actions-align="right"
@@ -212,6 +212,10 @@ export default defineComponent({
     isAgente() {
       const auth = localStorage.getItem('auth');
       return auth === 'agente';
+    },
+    isMed() {
+      const auth = localStorage.getItem('auth');
+      return auth === 'med';
     },
     noticiasFiltradas() {
       return this.listaNoticias.filter((noticia) => {

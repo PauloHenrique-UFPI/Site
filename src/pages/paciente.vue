@@ -110,7 +110,7 @@
           <q-carousel-slide name="acompanhamento" class="column no-wrap center">
             <div class="q-ma-md q-pa-md"
               style="display: flex; flex-wrap: wrap; justify-content: center;">
-              <div class="q-pa-md" style="max-width: 350px">
+              <div class="q-pa-md" style="max-width: 350px" v-if="!isAgente">
                 <q-list bordered>
                   <h6 style="color: orange; text-align: center;">Teste de Bacilos</h6>
                   <q-separator />
@@ -455,6 +455,10 @@ export default {
     isUser() {
       const auth = localStorage.getItem('auth');
       return auth === 'user';
+    },
+    isAgente() {
+      const auth = localStorage.getItem('auth');
+      return auth === 'agente';
     },
   },
   mounted() {

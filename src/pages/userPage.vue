@@ -128,6 +128,23 @@
 
           </q-card>
         </q-dialog>
+
+        <q-dialog v-model="showErro"
+          persistent transition-show="scale" transition-hide="scale">
+          <q-card class="bg-red-7 text-white" style="width: 300px">
+            <q-card-section>
+              <div class="text-h6 text-white">Atenção</div>
+            </q-card-section>
+
+            <q-card-section class="q-pt-none text-white">
+              Os campos não podem ser vazios !
+            </q-card-section>
+
+            <q-card-actions align="center" class="bg-white text-teal">
+              <q-btn flat label="OK" v-close-popup />
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
         </div>
       </div>
     </q-page>
@@ -148,6 +165,9 @@ export default {
     const showAddDialog = ref(false);
     const showDialogErro = ref(false);
     const showDialogOK = ref(false);
+    const showErro = ref(false);
+
+    const mensagem = '';
 
     const newUser = ref({
       nome: '',
@@ -240,24 +260,33 @@ export default {
     const submitForm = async () => {
       try {
         loadingAdd.value = true;
-        const token = localStorage.getItem('token');
-        const formData = new FormData();
+        if (newUser.value.nome !== '' && !newUser.value.email !== ''
+        && !newUser.value.number !== '' && !newUser.value.password !== ''
+        && !newUser.value.rule !== '') {
+          const token = localStorage.getItem('token');
+          const formData = new FormData();
 
-        formData.append('name', newUser.value.nome);
-        formData.append('email', newUser.value.email);
-        formData.append('number', newUser.value.number);
-        formData.append('password', newUser.value.password);
-        formData.append('rule', newUser.value.rule);
+          formData.append('name', newUser.value.nome);
+          formData.append('email', newUser.value.email);
+          formData.append('number', newUser.value.number);
+          formData.append('password', newUser.value.password);
+          formData.append('rule', newUser.value.rule);
 
-        if (newUser.value.rule === 'user') {
-          formData.append('id_paciente', newUser.value.idPaciente.id);
+          if (newUser.value.rule === 'user') {
+            formData.append('id_paciente', newUser.value.idPaciente.id);
+          }
+          await api.post('/create-user', formData, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          });
+
+          window.location.reload();
+        } else {
+          showErro.value = true;
+          mensagem.value = 'Todos os Campos são Obrigatorios !';
         }
-        await api.post('/create-user', formData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
       } catch (error) {
         console.error(error);
         loadingAdd.value = false;
@@ -280,12 +309,14 @@ export default {
       deleteRow,
       clearFields,
       options: [
-        'adm', 'agente', 'user',
+        'adm', 'med', 'agente', 'user',
       ],
       submitForm,
       showDialogErro,
       showDialogOK,
       loadingAdd,
+      showErro,
+      mensagem,
     };
   },
 
@@ -298,6 +329,10 @@ export default {
       const auth = localStorage.getItem('auth');
       return auth === 'agente';
     },
+    isMed() {
+      const auth = localStorage.getItem('auth');
+      return auth === 'med';
+    },
   },
 
   data() {
@@ -308,7 +343,7 @@ export default {
 
   mounted() {
     this.carregaPaciente();
-    if (this.isUser || this.isAgente) {
+    if (this.isUser || this.isAgente || this.isMed) {
       this.$router.push({ name: 'home' });
     }
   },

@@ -41,7 +41,8 @@
                   Atualizar
                 </template>
               </q-fab-action>
-          <q-fab-action color="red" @click="deletarAtivo = !deletarAtivo" v-if="!isAgente">
+          <q-fab-action color="red" @click="deletarAtivo = !deletarAtivo" v-if="!isAgente
+           && isMed && isUser">
                 <template v-if="deletarAtivo">
                   <q-icon name="cancel" />
                   Cancelar
@@ -132,6 +133,10 @@ export default defineComponent({
     isAgente() {
       const auth = localStorage.getItem('auth');
       return auth === 'agente';
+    },
+    isMed() {
+      const auth = localStorage.getItem('auth');
+      return auth === 'med';
     },
     pacienteFiltrados() {
       return this.lista.filter((paciente) => {

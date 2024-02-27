@@ -169,10 +169,14 @@ export default defineComponent({
       const auth = localStorage.getItem('auth');
       return auth === 'agente';
     },
+    isMed() {
+      const auth = localStorage.getItem('auth');
+      return auth === 'med';
+    },
   },
 
   mounted() {
-    if (this.isUser || this.isAgente) {
+    if (this.isUser || this.isAgente || this.isMed) {
       this.$router.push({ name: 'home' });
     }
   },

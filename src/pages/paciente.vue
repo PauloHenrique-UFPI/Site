@@ -128,7 +128,7 @@
                       <q-item-section>
 
                         <q-btn outline color="primary"
-                        icon="image_search" @click="baixarImagem(post.img)" />
+                        icon="image_search" @click="mostrarImg(post.img, post.data)" />
 
                       </q-item-section>
                     </q-item>
@@ -314,6 +314,16 @@
       </q-card>
     </q-dialog>
 
+    <q-dialog v-model="showImg" persistent>
+      <q-card class="my-card">
+        <img :src="imgS">
+        <q-card-actions align="center">
+          <q-btn label="Fechar" color="red" @click="fecharImg()" />
+        </q-card-actions>
+      </q-card>
+
+    </q-dialog>
+
     <q-dialog v-model="showDialog" persistent>
     <q-card>
       <template v-if="!loading">
@@ -435,6 +445,9 @@ export default {
       uploadedImageUrl: '',
       showDialog: false,
       feedback: [],
+      showImg: false,
+      imgS: '',
+      imgDisc: '',
 
     };
   },
@@ -520,6 +533,21 @@ export default {
         console.error('Erro ao baixar a imagem:', error);
       }
     },
+    async downloadItem() {
+      try {
+        const url = 'https://storage.googleapis.com/tb-koch.appspot.com/exames/1702070551346.jpg';
+        const label = '1702070551346.jpg';
+        const response = await api.get(url, { responseType: 'blob' });
+        const blob = new Blob([response.data], { type: 'application/img' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = label;
+        link.click();
+        URL.revokeObjectURL(link.href);
+      } catch (erro) {
+        console.log(erro);
+      }
+    },
     async carregaPaciente(id) {
       const token = localStorage.getItem('token');
       const url = `/paciente/${id}`;
@@ -551,6 +579,18 @@ export default {
         this.prontuarioChave = false;
         this.isLoading = false;
       }
+    },
+
+    mostrarImg(img, disc) {
+      this.imgS = img;
+      this.imgDisc = disc;
+      this.showImg = true;
+    },
+
+    fecharImg() {
+      this.imgS = '';
+      this.imgDisc = '';
+      this.showImg = false;
     },
 
     exibir(paciente) {

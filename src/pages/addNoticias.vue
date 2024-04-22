@@ -11,12 +11,12 @@
           class="q-gutter-md"
         >
 
-        <div><h2>Noticia</h2></div>
+        <div><h2>Notícias</h2></div>
           <q-input
             filled
             v-model="titulo"
             label="Título *"
-            hint="Título para sua Noticia"
+            hint="Título para sua notícia"
             lazy-rules
             :rules="[ val => val && val.length > 0 || 'Por favor digite um título']"
           />
@@ -24,7 +24,7 @@
             filled
             v-model="prefacio"
             label="Préfacio *"
-            hint="Breve descrição da noticia"
+            hint="Breve descrição da notícia"
             lazy-rules
             :rules="[ val => val && val.length > 0 || 'Por favor digite um Préfacio']"
           />
@@ -38,13 +38,13 @@
             </template>
 
             <template v-slot:hint>
-              Imagem para ser anexada a notica
+              Imagem para ser anexada a notícia
             </template>
           </q-file>
 
           <q-editor
                       v-model="descricao"
-                      min-height="5rem"
+                      min-height="10rem"
                       label="Nota"
                       filled
                       autogrow
@@ -89,11 +89,11 @@
 
                     />
 
-          <div>
+          <div class="flex flex-center">
             <q-btn label="Enviar" type="submit"  @click="submitForm"
             icon="send" color="red"/>
 
-            <q-btn label="Cancelar" to="/" color="primary" flat/>
+            <q-btn label="Cancelar" to="/home" color="primary" flat/>
           </div>
         </q-form>
     </q-card>

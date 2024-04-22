@@ -20,7 +20,7 @@
         </q-input>
 
       <div class="add"
-      style="position:position: fixed; right: 2rem; bottom: 2rem; "
+      style="position: fixed; right: 2rem; bottom: 2rem; "
       v-if="!isUser">
         <q-fab
           v-model="fabRight"
@@ -227,7 +227,7 @@ top: 75%;
 
 .card2 {
   flex-basis: 20%;
-  width: 250px;
+  width: 300px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }

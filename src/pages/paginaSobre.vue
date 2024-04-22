@@ -10,134 +10,36 @@
       >
 
         <q-carousel-slide name="tutorial" class="custom-carousel-slide column no-wrap flex-center">
-          <h2 class="nameTitulo">Bem-vindo ao TB KOCH</h2>
-          <p class="sobre-content">
-            Seja muito bem vindo, somos um site inovador criado com o propósito
-            de auxiliar no diagnóstico precoce da tuberculose. <br>
-            Estamos empenhados em transformar a abordagem tradicional
-            de identificação desta doença, tornando o processo mais <br>eficiente
-            e acessível para todos. Nós, da equipe TB KOCH, estamos profundamente comprometidos
-            em fazer a diferença <br> na luta contra
-            a tuberculose. Acreditamos que, com a ajuda da
-            tecnologia e da inovação, podemos mudar o cenário atual <br> e proporcionar um futuro
-            mais saudável para todos.Convidamos você a explorar nosso site e descobrir
-            mais sobre nosso <br> projeto, seus benefícios e a tecnologia
-            inovadora que impulsiona nosso desenvolvimento.
-            Estamos entusiasmados com o <br>impacto positivo que nosso software pode ter
-            na luta contra a tuberculose. Agradecemos sua visita e interesse nesta iniciativa <br>
-            de grande importância. Junte-se a nós na busca por
-            um diagnóstico precoce e eficaz,
-            uma missão que pode salvar inúmeras <br> vidas. Seja parte desta mudança!
-          </p>
+          <div class="sobreSite">
+            <div class="q-responsive sobre-content">
+              <h2 class="nameTitulo text-center">Bem-vindo ao TB KOCH</h2>
+              <p class="q-ma-md q-pa-md">
+                Seja muito bem vindo, somos um site inovador criado
+                com o propósito de auxiliar no diagnóstico precoce
+                da tuberculose. Estamos empenhados em transformar
+                a abordagem tradicional de identificação desta doença,
+                tornando o processo mais eficiente e acessível para todos.
+                Nós, da equipe TB KOCH, estamos profundamente comprometidos
+                em fazer a diferença na luta contra a tuberculose.
+                Acreditamos que, com a ajuda da tecnologia e da inovação,
+                podemos mudar o cenário atual  e proporcionar um futuro
+                mais saudável para todos.Convidamos você a explorar nosso
+                site e descobrir mais sobre nosso projeto, seus benefícios
+                e a tecnologia inovadora que impulsiona nosso desenvolvimento.
+                Estamos entusiasmados com o impacto positivo que nosso software
+                pode ter na luta contra a tuberculose. Agradecemos sua visita
+                e interesse nesta iniciativa de grande importância. Junte-se
+                a nós na busca por um diagnóstico precoce e eficaz, uma missão
+                  que pode salvar inúmeras vidas. Seja parte desta mudança!
+              </p>
+          </div>
+          </div>
       </q-carousel-slide>
       <q-carousel-slide name="map" class="column no-wrap flex-center">
-          <div class="q-mt-md text-center">
-            <div class="card-wrapper">
-              <div class="card">
-                <div class="image-content">
-                  <span class="overlay"></span>
-                  <div class="card-image">
-                    <q-avatar style="width: 100%; height: 100%;">
-                      <img src="../assets/paulo.jpg" alt="" class="card-img" />
-                    </q-avatar>
-                  </div>
-                </div>
-                <div class="card-content">
-                  <h2 class="name">Paulo Henrique</h2>
-                  <p class="description">Bacharelando em Sistemas de Informação CSHNB - Picos PI</p>
-                  <div class="social-links">
-                    <a href="https://www.linkedin.com/in/paulo-henrique-5792ab274" target="_blank" rel="noopener noreferrer">
-                      <img src="../assets/linkedin.png" alt="Linkedin" />
-                    </a>
-                    <a href="https://github.com/PauloHenrique-UFPI" target="_blank" rel="noopener noreferrer">
-                      <img src="../assets/github_PNG4.png" alt="GitHub" />
-                    </a>
-                <a href="mailto:hunter404paulo@gmail.com" target="_blank" rel="noopener noreferrer">
-                      <img src="../assets/gmail.png" alt="Gmail" />
-                    </a>
-                  </div>
-                </div>
-              </div>
-              <div class="card">
-                <div class="image-content">
-                  <span class="overlay"></span>
-                  <div class="card-image">
-                    <q-avatar style="width: 100%; height: 100%;">
-                      <img src="../assets/dale.jpg" alt="" class="card-img" />
-                    </q-avatar>
-                  </div>
-                </div>
-                <div class="card-content">
-                  <h2 class="name">Marcos Dalessandro</h2>
-                  <p class="description">Bacharelando em Sistemas de Informação CSHNB - Picos PI</p>
-                  <div class="social-links">
-                    <a href="https://www.linkedin.com/in/marcos-dalessandro-c-148250191/" target="_blank" rel="noopener noreferrer">
-                      <img src="../assets/linkedin.png" alt="Linkedin" />
-                    </a>
-                    <a href="https://github.com/MarcosDalessandro" target="_blank" rel="noopener noreferrer">
-                      <img src="../assets/github_PNG4.png" alt="GitHub" />
-                    </a>
-                      <a href="mailto:marcosdalessandroclima@ufpi.edu.br"
-                      target="_blank" rel="noopener noreferrer">
-                      <img src="../assets/gmail.png" alt="Gmail" />
-                    </a>
-                  </div>
-                </div>
-              </div>
-              <div class="card">
-                <div class="image-content">
-                  <span class="overlay"></span>
-                  <div class="card-image">
-                    <q-avatar style="width: 100%; height: 100%;">
-                      <img src="../assets/pedro.jpeg.jpg" alt="" class="card-img" />
-                    </q-avatar>
-                  </div>
-                </div>
-                <div class="card-content">
-                  <h2 class="name">Pedro Tércio</h2>
-                <p class="description">Bacharelando em Sistemas de Informação CSHNB - Picos PI </p>
-                  <div class="social-links">
-                    <a href="https://www.linkedin.com/in/pedro-t%C4%97rcio-9ba204243/" target="_blank" rel="noopener noreferrer">
-                      <img src="../assets/linkedin.png" alt="Linkedin" />
-                    </a>
-                    <a href="https://github.com/pedrotercio14" target="_blank" rel="noopener noreferrer">
-                      <img src="../assets/github_PNG4.png" alt="GitHub" />
-                    </a>
-                <a href="mailto:pedrotercio30@gmail.com" target="_blank" rel="noopener noreferrer">
-                      <img src="../assets/gmail.png" alt="Gmail" />
-                    </a>
-                  </div>
-                </div>
-              </div>
-              <div class="card">
-                <div class="image-content">
-                  <span class="overlay"></span>
-                  <div class="card-image">
-                    <q-avatar style="width: 100%; height: 100%;">
-                      <img src="../assets/dudu.jpeg" alt="" class="card-img" />
-                    </q-avatar>
-                  </div>
-                </div>
-                <div class="card-content">
-                  <h2 class="name">Eduardo S.</h2>
-                <p class="description">Bacharelando em Sistemas de Informação CSHNB - Picos PI </p>
-                  <div class="social-links">
-                    <a href="https://www.linkedin.com/in/eduardo-de-sousa-3a02a2254" target="_blank" rel="noopener noreferrer">
-                      <img src="../assets/linkedin.png" alt="Linkedin" />
-                    </a>
-                    <a href="https://github.com/eduardosousaa" target="_blank" rel="noopener noreferrer">
-                      <img src="../assets/github_PNG4.png" alt="GitHub" />
-                    </a>
-                <a href="mailto:eduardosousa@ufpi.edu" target="_blank" rel="noopener noreferrer">
-                      <img src="../assets/gmail.png" alt="Gmail" />
-                    </a>
-                  </div>
-                </div>
-              </div>
-
-            </div>
+          <div class="mapBox">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3959.3814966837945!2d-41.455161424258684!3d-7.081694869418857!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x79c1198ef9a45cb%3A0x49d2a4450d1a32ae!2sPAM%3A%20Posto%20de%20Acessoria%20M%C3%A9dica!5e0!3m2!1spt-BR!2sbr!4v1713791843195!5m2!1spt-BR!2sbr"  style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
           </div>
-        </q-carousel-slide>
+      </q-carousel-slide>
       </q-carousel>
       <div class="row justify-center">
         <q-btn-toggle
@@ -147,7 +49,7 @@
           :options="[
 
              { label: 'Sobre', value: 'tutorial' },
-             { label: 'Desenvolvedores', value: 'map' }
+             { label: 'Localização', value: 'map' }
 
           ]"
           class="custom-toggle-options"
@@ -176,6 +78,25 @@ export default defineComponent({
   padding: 10px;
 }
 
+@media (max-width: 700px) {
+  .sobre-content {
+    font-size: 10px;
+    padding: 0;
+  }
+}
+
+.sobreSite {
+  width: 1000px;
+  height: 400px;
+}
+
+@media (max-width: 700px) {
+  .sobreSite {
+    width: 400px;
+    height: 400px;
+  }
+}
+
 @media (max-width: 1200px) {
   .sobre-content {
     font-size: 12px;
@@ -183,7 +104,27 @@ export default defineComponent({
   }
 }
 
-.card-wrapper {
+.mapBox {
+  position: relative;
+  display: flex;
+  width: 600px;
+  height: 500px;
+  background: #fff;
+}
+
+@media (max-width: 700px) {
+  .mapBox {
+    width: 300px;
+    height: 200px;
+  }
+}
+
+.mapBox iframe {
+  width: 100%;
+  height: 100%;
+}
+
+/* .card-wrapper {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
@@ -246,14 +187,14 @@ export default defineComponent({
   justify-content: center;
   align-items: center;
   text-align: center;
-}
+} */
 
-.name {
+/* .name {
   font-size: 25px;
   font-weight: bold;
   margin: 10px 0;
-  /* color: red; */
-}
+  color: red;
+} */
 
 .nameTitulo {
   font-size: 25px;
@@ -262,7 +203,7 @@ export default defineComponent({
   color: red
 }
 
-.description {
+/* .description {
   color: #777;
   margin: 0;
 }
@@ -281,7 +222,7 @@ export default defineComponent({
 .social-links img {
   width: 24px;
   height: 24px;
-}
+} */
 
 .row {
   margin-top: 20px;

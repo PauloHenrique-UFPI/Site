@@ -27,10 +27,14 @@
             <q-icon left name="settings" />
 
           </div>
-        </template>
+        </template>   
 
       <div class="row no-wrap q-pa-md">
-        <div class="column">
+        
+        <q-btn outline rounded color="grey" label="Logout" icon="logout"
+        v-close-popup
+          @click="fazerLogoff"/>
+        <!-- <div class="column">
           <div class="text-h6 q-mb-md">Configurações</div>
           <q-toggle v-model="darkMode" checked-icon="nights_stay"
         color="black" unchecked-icon="light_mode" >Trocar Tema</q-toggle>
@@ -39,20 +43,7 @@
         <q-separator vertical inset class="q-mx-lg" />
 
         <div class="column items-center">
-
-          <!-- aqui !!!!!!!!!!!!! -->
-
-          <div class="text-subtitle1 q-mt-md q-mb-xs"></div>
-
-          <q-btn
-            color="primary"
-            label="Logout"
-            push
-            size="sm"
-            v-close-popup
-            @click="fazerLogoff"
-          />
-        </div>
+        </div> -->
       </div>
     </q-btn-dropdown>
   </div>

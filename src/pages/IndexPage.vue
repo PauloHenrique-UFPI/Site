@@ -148,12 +148,20 @@
                         Imagem para ser anexada a notica
                       </template>
                     </q-file>
-                    <q-input
-                    outlined
-                    v-model="descricao"
-                    label="Nova descrição *"
-                    :rules="[ val => val && val.length > 0 || 'Por favor digite um descrição']"
-                    />
+                    <div class="q-pa-md q-gutter-sm">
+                    <form
+                      autocorrect="off"
+                      autocapitalize="off"
+                      autocomplete="off"
+                      spellcheck="false"
+                    >
+                      <q-editor
+                        ref="decricao"
+                        @paste="onPaste"
+                        v-model="descricao"
+                      />
+                    </form>
+                  </div>
                 </q-card-section>
                 <q-card-actions align="center">
                   <q-btn label="Cancelar" color="grey" @click="fecharUpNoticia" />
@@ -365,7 +373,7 @@ export default defineComponent({
   position: fixed;
 
   left:85%;
-  top: 75%;
+  top: 78%;
   z-index: 2;
 
 }
@@ -400,6 +408,7 @@ export default defineComponent({
 
 .card{
   height: 400px;
+  min-width: 350px;
   border-radius: 2%;
   display: flex;
   flex-direction: column;
@@ -413,6 +422,7 @@ export default defineComponent({
 .titulo-noticia{
     font-size: 24px;
     font-family: 'Courier New';
+    text-align: center;
     font-weight: bold;
     border: 5px solid #e90808;
     border-radius: 10px;

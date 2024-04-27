@@ -20,7 +20,7 @@
         </q-input>
 
       <div class="add"
-      style="position:position: fixed; right: 2rem; bottom: 2rem; "
+      style="position: fixed; right: 2rem; bottom: 2rem; "
       v-if="!isUser">
         <q-fab
           v-model="fabRight"
@@ -217,8 +217,6 @@ export default defineComponent({
 <style lang="scss">
 
 .add{
-
-position: fixed;
 
 left: 85%;
 top: 75%;

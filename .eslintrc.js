@@ -53,7 +53,7 @@ module.exports = {
 
   // add your custom rules here
   rules: {
-
+    'no-trailing-spaces': 'off',
     'no-param-reassign': 'off',
     'no-void': 'off',
     'no-nested-ternary': 'off',
@@ -72,6 +72,7 @@ module.exports = {
     'prefer-promise-reject-errors': 'off',
     'vue/no-unused-components': 'off',
     "linebreak-style": 0,
+    "indent": "off",
 
     // allow debugger during development only
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'

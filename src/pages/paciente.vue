@@ -253,10 +253,8 @@
     <q-dialog v-model="showEventDetails">
       <q-card>
         <q-card-section>
-          <p>{{ selectedEvent.title }}</p>
-          <q-separator class="my-separator" />
-          <p>Data: {{ selectedEvent.date }}</p>
-          <p>Hora: {{ selectedEvent.time }}</p>
+          <p style="text-align: center;">{{ selectedEvent.title }}</p>
+          
         </q-card-section>
         <q-card-actions align="right">
           <q-btn label="Fechar" color="primary" @click="closeEventDetails" />
@@ -416,7 +414,7 @@ export default {
       adicionouEvento: false,
       removeuEvento: false,
       calendarOptions: {
-
+        timeZone: 'UTC', 
         plugins: [dayGridPlugin, interactionPlugin],
         initialView: 'dayGridMonth',
         locale: 'pt-br',
@@ -703,8 +701,12 @@ export default {
         this.calendarOptions.events = eventosDaApi.map((evento) => ({
           id: evento.id,
           title: evento.tittle,
-          date: evento.date,
+          date: moment.utc(evento.date).format(),
         }));
+        console.log('O que veio:', response.data.groups);
+        // eslint-disable-next-line
+        console.log('O que está:', this.calendarOptions.events);
+        
       } catch (error) {
         this.erro = true;
         this.mensagem = 'Não foi possivel carregar os Eventos';

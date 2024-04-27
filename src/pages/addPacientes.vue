@@ -176,7 +176,7 @@
               :rules="[ val => val && val.length > 0 || 'Este campo é obrigatório']"
             />
 
-            <div>
+            <div class="flex flex-center">
               <q-btn label="Enviar" type="submit"  @click="submitForm" icon="send" color="red"/>
 
               <q-btn label="Cancelar" to="/home" color="primary" flat/>

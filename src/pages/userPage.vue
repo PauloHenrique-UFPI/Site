@@ -55,9 +55,9 @@
             </q-card>
           </q-dialog>
           <q-dialog v-model="showAddDialog" maximized @close="clearFields">
-          <q-card class="my-card" style="max-width: 450px; max-height: 520px;">
+          <q-card class="my-card" style="max-width: 500px; max-height: 510px; padding: 10px;">
             <template v-if="!loadingAdd">
-              <h4 align="center">Novo Usuário</h4>
+              <h3 class="titulo">Novo Usuário</h3>
               <q-card-section>
 
                 <q-input
@@ -82,9 +82,17 @@
                     label="Senha *"
                     hint="Senha para login"
                     lazy-rules
+                    :type="isPwd ? 'password' : 'text'"
                     :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
-                    type="password"
-                  />
+                  >
+                    <template v-slot:append>
+                      <q-icon
+                        :name="isPwd ? 'visibility_off' : 'visibility'"
+                        class="cursor-pointer"
+                        @click="isPwd = !isPwd"
+                      />
+                    </template>
+                    </q-input>
                 <q-input
                     filled
                     v-model="newUser.number"
@@ -104,25 +112,38 @@
                     :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
                     />
                   <q-select
-                  v-if="newUser.rule === 'user'"
-                  filled
-                  v-model="newUser.idPaciente"
-                  :options="options2"
-                  label="Usuário Vinculado *"
-                  hint="Selecione na Lista"
-                  option-label="nome"
-                  :option-value="getId"
-                  />
+                    v-if="newUser.rule === 'user'"
+                    filled
+                    v-model="newUser.idPaciente"
+                    use-input
+                    input-debounce="0"
+                    label="Simple filter"
+                    :options="filteredOptions"
+                    @filter="filterFn"
+                    style="width: 250px"
+                    behavior="dialog"
+                    clearable
+                    option-label="nome"
+                   :option-value="getId"
+                  >
+                    <template v-slot:no-option>
+                      <q-item>
+                        <q-item-section class="text-grey">
+                          No results
+                        </q-item-section>
+                      </q-item>
+                    </template>
+                  </q-select>
               </q-card-section>
-              <q-card-actions align="right">
-                <q-btn color="negative" label="Cancelar" @click="clearFieldsAndClose" />
+              <q-card-actions align="center">
+                <q-btn color="grey" label="Cancelar" @click="clearFieldsAndClose" />
                 <q-btn color="positive" label="Salvar" @click="submitForm" />
               </q-card-actions>
             </template>
 
             <template v-else>
-              <q-card-section align="center">
-                <q-spinner :size="120" color="red" />
+              <q-card-section align="center" style="top: 35%;">
+                <q-spinner-ball :size="100" color="red" />
               </q-card-section>
             </template>
 
@@ -317,6 +338,8 @@ export default {
       loadingAdd,
       showErro,
       mensagem,
+      isPwd: ref(true),
+      
     };
   },
 
@@ -338,6 +361,7 @@ export default {
   data() {
     return {
       options2: [],
+      filteredOptions: [],
     };
   },
 
@@ -366,6 +390,22 @@ export default {
         console.log(error);
       }
     },
+    filterFn(val, update) {
+      console.log('Options before filter:', this.options2);
+      console.log('Filtered options before update:', this.filteredOptions);
+      if (val === '') {
+          update(() => {
+              this.filteredOptions = this.options2;
+          });
+          return;
+      }
+      update(() => {
+          const needle = val.toLowerCase();
+          // eslint-disable-next-line
+          this.filteredOptions = this.options2.filter(v => v.nome.toLowerCase().includes(needle));
+      });
+    },
+
     getId(option) {
       return option.id;
     },
@@ -387,5 +427,17 @@ export default {
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin: 0 auto;
+  }
+
+  .titulo{
+    font-size: 24px;
+    font-family: 'Courier New';
+    text-align: center;
+    font-weight: bold;
+    border: 5px solid #e90808;
+    border-radius: 10px;
+    color: #000000;
+    margin-bottom: 20px;
+    padding: 12px;
   }
 </style>

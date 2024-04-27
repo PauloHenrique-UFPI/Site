@@ -47,45 +47,47 @@ export default {
 </script>
 
 <style scoped>
-.footer-page {
-  border-top: 1px solid #333;
-  height: auto; /* Ajuste a altura para auto para acomodar o conteúdo adicional */
-  position: relative;
-  width: 100%;
-  flex-direction: column;
-  justify-content: start;
-  align-items: center;
-  display: flex;
-  padding: 20px;
-}
-.contact-container {
-  display: flex;
-  flex-direction: row;
-  align-items: start;
-  justify-content: space-between;
-}
-.emergency-contacts,
-.additional-info,
-.useful-links,
-.social-media {
-  margin-top: 20px;
-  text-align: left;
-  margin-right: 20px;
-}
-.footer-text {
-  margin-top: 20px;
-}
-p, h4, li {
-  margin: 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-a {
-  color: #ffffff;
-}
-a:hover {
-  cursor: pointer;
-}
+  .footer-page {
+    border-top: 1px solid #333;
+    height: auto; /* Ajuste a altura para auto para acomodar o conteúdo adicional */
+    position: absolute;
+    width: 100%;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    display: flex;
+    padding: 10px;
+  }
+  
+  .contact-container {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    justify-content: space-between;
+  }
+
+  .emergency-contacts,
+  .additional-info,
+  .useful-links,
+  .social-media {
+    margin-top: 20px;
+    text-align: left;
+    margin-right: 20px;
+  }
+  .footer-text {
+    margin-top: 20px;
+  }
+  p, h4, li {
+    margin: 0;
+  }
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  a {
+    color: #ffffff;
+  }
+  a:hover {
+    cursor: pointer;
+  }
 </style>

@@ -359,72 +359,9 @@ export default {
       });
   },
   methods: {
-    async envio() {
-      try {
-        this.loading = true;
-        const formData = new FormData();
-        formData.append('file', this.imgPred);
-        const response = await api.post(
-          'https://hunterph.com.br/upload',
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-            responseType: 'arraybuffer',
-          },
-        );
-
-        if (response.status === 200) {
-          const blob = new Blob([response.data], { type: 'image/png' });
-          const imageUrl = URL.createObjectURL(blob);
-
-          this.uploadedImageUrl = imageUrl;
-
-          // Obter o nome do arquivo da própria imagem
-          const filename = this.imgPred.name;
-          const token = localStorage.getItem('token');
-
-          const imgFormData = new FormData();
-          imgFormData.append('nome', 'Teste');
-          imgFormData.append('date', '2023-08-08T12:00:00.000Z');
-          imgFormData.append('paciente', 32);
-          imgFormData.append('img', blob, filename);
-          const imgResponse = await api.post(
-            '/create-exame',
-            imgFormData,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'multipart/form-data',
-              },
-            },
-          );
-          console.log(imgResponse);
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        this.loading = false;
-        window.location.reload();
-      }
-    },
-
     formatDatePublish(date) {
       const options = { day: '2-digit', month: 'long', year: 'numeric' };
       return new Date(date).toLocaleDateString('pt-BR', options);
-    },
-    async baixarImagem(urlImagem) {
-      try {
-        const link = document.createElement('a');
-        link.href = urlImagem;
-        link.download = '1702070551346.jpg'; // Defina o nome do arquivo desejado
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      } catch (error) {
-        console.error('Erro ao baixar a imagem:', error);
-      }
     },
     async carregaPaciente(id) {
       const token = localStorage.getItem('token');

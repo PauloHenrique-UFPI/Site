@@ -1,5 +1,14 @@
 <template>
   <div class="page-paciente">
+    <div class="addFeed" style="position: abs;" v-if="!isUser && !isAgente && !isMed">
+      <q-btn
+      padding="lg"
+      color="orange"
+      round
+      icon="add_comment"
+      @click="feedbackDialog = true"
+     />
+    </div>
     <div v-if="isLoading" class="loading-animation"></div>
 
     <div class="carro" v-else>
@@ -376,6 +385,148 @@
     </q-card>
   </q-dialog>
 
+  <q-dialog v-model="feedbackDialog">
+    <q-card style="width: 600px">
+      <q-card-section>
+        <q-form @submit.prevent="submitAnswer">
+          <h6 style="text-align: center">{{ currentQuestion }}</h6>
+
+            <div v-if="currentQuestionIndex === 0" 
+            class="p1 q-gutter-sm" >
+              <q-radio keep-color v-model="tempoT" val="1 a 3 meses" 
+              label="1 a 3 meses" color="teal" checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="tempoT" val="3 a 6 meses"
+              label="3 a 6 meses" color="orange"  checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="tempoT" val="6 a 9 meses"
+               label="6 a 9 meses" color="red"  checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="tempoT" val="mais de 9 meses"
+              label="mais de 9 meses" color="cyan" checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+            </div>
+
+            <div  v-if="currentQuestionIndex === 1" class="p1 q-gutter">
+              <q-radio keep-color v-model="familia" val="Ruim" 
+              label="Ruim" color="red" checked-icon="sentiment_dissatisfied" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="familia" val="Regular"
+              label="Regular" color="grey"  checked-icon="sentiment_neutral" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="familia" val="Bom"
+               label="Bom" color="green"  checked-icon="sentiment_satisfied" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="familia" val="Ótimo"
+              label="Ótimo" color="blue" checked-icon="sentiment_very_satisfied" 
+              unchecked-icon="panorama_fish_eye"/>
+            </div>
+
+            <div  v-if="currentQuestionIndex === 2" class="p1 q-gutter-sm">
+              <q-radio keep-color v-model="informativo" val="Não sei nada" 
+              label="Ruim" color="red" checked-icon="sentiment_dissatisfied" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="informativo" val="Regular"
+              label="Regular" color="grey"  checked-icon="sentiment_neutral" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="informativo" val="Bom"
+               label="Bom" color="green"  checked-icon="sentiment_satisfied" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="informativo" val="Ótimo"
+              label="Ótimo" color="blue" checked-icon="sentiment_very_satisfied" 
+              unchecked-icon="panorama_fish_eye"/>
+            </div>
+
+            <div  v-if="currentQuestionIndex === 3" class="p1 q-gutter">
+              <q-radio keep-color v-model="alimentacao" val="Ruim" 
+              label="Ruim" color="red" checked-icon="sentiment_dissatisfied" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="alimentacao" val="Regular"
+              label="Regular" color="grey"  checked-icon="sentiment_neutral" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="alimentacao" val="Bom"
+               label="Bom" color="green"  checked-icon="sentiment_satisfied" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="alimentacao" val="Ótimo"
+              label="Ótimo" color="blue" checked-icon="sentiment_very_satisfied" 
+              unchecked-icon="panorama_fish_eye"/>
+            </div>
+
+            <div  v-if="currentQuestionIndex === 4" class="p1 q-gutter">
+              <q-radio keep-color v-model="apoioUBS" val="Ruim" 
+              label="Ruim" color="red" checked-icon="sentiment_dissatisfied" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="apoioUBS" val="Regular"
+              label="Regular" color="grey"  checked-icon="sentiment_neutral" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="apoioUBS" val="Bom"
+               label="Bom" color="green"  checked-icon="sentiment_satisfied" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="apoioUBS" val="Ótimo"
+              label="Ótimo" color="blue" checked-icon="sentiment_very_satisfied" 
+              unchecked-icon="panorama_fish_eye"/>
+            </div>
+
+            <div  v-if="currentQuestionIndex === 5" class="p1 q-gutter">
+              <q-radio keep-color v-model="medicacao" val="Ruim" 
+              label="Ruim" color="red" checked-icon="sentiment_dissatisfied" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="medicacao" val="Regular"
+              label="Regular" color="grey"  checked-icon="sentiment_neutral" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="medicacao" val="Bom"
+               label="Bom" color="green"  checked-icon="sentiment_satisfied" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="medicacao" val="Ótimo"
+              label="Ótimo" color="blue" checked-icon="sentiment_very_satisfied" 
+              unchecked-icon="panorama_fish_eye"/>
+            </div>
+
+            <div  v-if="currentQuestionIndex === 6" class="p1 q-gutter">
+              <q-radio keep-color v-model="exepctativa" val="Ruim" 
+              label="Ruim" color="red" checked-icon="sentiment_dissatisfied" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="exepctativa" val="Regular"
+              label="Regular" color="grey"  checked-icon="sentiment_neutral" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="exepctativa" val="Bom"
+               label="Bom" color="green"  checked-icon="sentiment_satisfied" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="exepctativa" val="Ótimo"
+              label="Ótimo" color="blue" checked-icon="sentiment_very_satisfied" 
+              unchecked-icon="panorama_fish_eye"/>
+            </div>
+
+          <div style="margin-top: 10px; display: flex; justify-content: space-between;">
+            <q-card-actions class="bg-white text-teal">
+              <q-btn
+                v-if="currentQuestionIndex > 0 && currentQuestionIndex < 7"
+                round
+                color="white"
+                icon="arrow_back"
+                class="text-black"
+                @click="previousQuestion"
+              />
+            </q-card-actions>
+            <q-card-actions class="bg-white text-teal">
+              <q-btn v-if="currentQuestionIndex === 6" label="ENVIAR"></q-btn>
+            </q-card-actions>
+            <q-card-actions class="bg-white text-teal">
+              <q-btn
+                v-if="currentQuestionIndex < 6"
+                round
+                type="submit"
+                color="white"
+                icon="east"
+                class="text-black"
+              />
+            </q-card-actions> 
+          </div>
+        </q-form>
+      </q-card-section>
+    </q-card>
+  </q-dialog>
+
 </template>
 
 <script>
@@ -446,6 +597,24 @@ export default {
       showImg: false,
       imgS: '',
       imgDisc: '',
+      feedbackDialog: false,
+      questions: [
+        'A quanto tempo está sendo tratado?', 
+        'Quanto de Apoio Familiar você recebe?', 
+        'O quão bem informado sobre sua doença você é?',
+        'Como você classifica sua alimentação?',
+        'Você quanto de Apoio da UBS você recebe?',
+        'Como você se sente sobre sua Medicação?',
+        'Em escala o quanto você esta melhorando?'],
+      currentQuestionIndex: 0,
+      answer: '',
+      tempoT: '',
+      familia: '',
+      informativo: '',
+      alimentacao: '',
+      apoioUBS: '',
+      medicacao: '',
+      exepctativa: '',
 
     };
   },
@@ -457,6 +626,9 @@ export default {
     isAgente() {
       const auth = localStorage.getItem('auth');
       return auth === 'agente';
+    },
+    currentQuestion() {
+      return this.questions[this.currentQuestionIndex];
     },
   },
   mounted() {
@@ -474,7 +646,7 @@ export default {
         const formData = new FormData();
         formData.append('file', this.imgPred);
         const response = await api.post(
-          'https://hunterph.com.br/upload',
+          'https://tbkoch.com.br/api1/upload',
           formData,
           {
             headers: {
@@ -493,11 +665,20 @@ export default {
           // Obter o nome do arquivo da própria imagem
           const filename = this.imgPred.name;
           const token = localStorage.getItem('token');
+          const now = new Date();
+          const year = now.getUTCFullYear();
+          const month = String(now.getUTCMonth() + 1).padStart(2, '0');
+          const day = String(now.getUTCDate()).padStart(2, '0');
+          const hours = String(now.getUTCHours()).padStart(2, '0');
+          const minutes = String(now.getUTCMinutes()).padStart(2, '0');
+          const seconds = String(now.getUTCSeconds()).padStart(2, '0');
+          const milliseconds = String(now.getUTCMilliseconds()).padStart(3, '0');
 
+          const isoString = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
           const imgFormData = new FormData();
           imgFormData.append('nome', 'Teste');
-          imgFormData.append('date', '2023-08-08T12:00:00.000Z');
-          imgFormData.append('paciente', 32);
+          imgFormData.append('date', isoString);
+          imgFormData.append('paciente', this.$route.params.id);
           imgFormData.append('img', blob, filename);
           const imgResponse = await api.post(
             '/create-exame',
@@ -517,6 +698,10 @@ export default {
         this.loading = false;
         window.location.reload();
       }
+    },
+
+    clearFile() {
+      this.imgPred = null;
     },
 
     formatDatePublish(date) {
@@ -593,6 +778,11 @@ export default {
       this.imgS = '';
       this.imgDisc = '';
       this.showImg = false;
+    },
+
+    dialogIMG() {
+      this.showDialog = true;
+      console.log(this.showDialog);
     },
 
     exibir(paciente) {
@@ -726,6 +916,25 @@ export default {
         this.mensagem = 'Não foi possivel carregar os Exames';
       }
     },
+    submitAnswer() {
+      console.log('Resposta:', this.answer);
+      this.answer = '';
+      if (this.currentQuestionIndex < this.questions.length - 1) {
+        // eslint-disable-next-line
+        this.currentQuestionIndex++;
+      } else {
+        this.dialogVisible = false;
+      }
+    },
+    previousQuestion() {
+      if (this.currentQuestionIndex > 0) {
+        // eslint-disable-next-line
+        this.currentQuestionIndex--;
+      }
+    },
+    closeDialogfeed() {
+      this.dialogVisible = false;
+    },
   },
 };
 </script>
@@ -837,5 +1046,18 @@ export default {
 
 .clickable {
   cursor: pointer;
+}
+
+.addFeed{
+  position: fixed;
+  left:85%;
+  top: 78%;
+  z-index: 2;
+}
+
+.p1 {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
 }
 </style>

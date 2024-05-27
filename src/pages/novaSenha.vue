@@ -150,7 +150,7 @@ export default {
             novaSenha: this.senha,
           };
 
-          const response = await api.post('https://api-koch.onrender.com/trocarSenha', payload);
+          const response = await api.post('/trocarSenha', payload);
 
           if (response) {
             this.notifyOK = true;

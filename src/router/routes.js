@@ -54,7 +54,9 @@ const routes = [
       {
         path: '/minhaFicha', name: 'minhaFicha', component: () => import('pages/minhaFicha'), beforeEnter: authGuard,
       },
-
+      {
+        path: '/info', name: 'informacoes', component: () => import('pages/infoPage'), beforeEnter: authGuard,
+      },
     ],
   },
 

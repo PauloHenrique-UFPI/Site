@@ -73,6 +73,7 @@ module.exports = {
     'vue/no-unused-components': 'off',
     "linebreak-style": 0,
     "indent": "off",
+    "max-len": ["off"],
 
     // allow debugger during development only
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'

@@ -117,7 +117,7 @@
                     v-model="newUser.idPaciente"
                     use-input
                     input-debounce="0"
-                    label="Simple filter"
+                    label="Selecione o paciente Vinculado"
                     :options="filteredOptions"
                     @filter="filterFn"
                     style="width: 250px"

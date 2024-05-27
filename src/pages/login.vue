@@ -1,17 +1,34 @@
 <template>
   <q-page class="page flex justify-center">
-    <div class="q-pa-md" style="min-width: 35%;">
+    <div class="q-pa-md login">
       <q-card class="my-card0">
         <q-form
           @submit="onSubmit"
           @reset="onReset"
           class="q-gutter-md"
         >
-          <h2 style="text-align: center;">Login</h2>
+          <div class="imagem_login">
+            <img alt="logo" src="../assets/logo.png" > 
+          </div>
+         
           <q-input rounded outlined v-model="username" label="E-mail" :readonly="loading" />
 
-          <q-input rounded outlined v-model="password" @keyup.enter="submitForm"
-          type="password" label="Senha" :readonly="loading"/>
+          <q-input rounded 
+          outlined 
+          v-model="password" 
+          @keyup.enter="submitForm"
+          label="Senha" 
+          :readonly="loading" 
+          :type="isPwd ? 'password' : 'text'"
+          >
+            <template v-slot:append>
+              <q-icon
+                :name="isPwd ? 'visibility_off' : 'visibility'"
+                class="cursor-pointer"
+                @click="isPwd = !isPwd"
+              />
+            </template>
+          </q-input>
           <div class="q-gutter-md q-mt-md q-mb-md q-flex q-items-end">
             <router-link to="/recuperar" class="text-primary">
               Esqueceu a senha?
@@ -21,13 +38,15 @@
             <q-btn
               unelevated
               rounded
+              class="glossy"
               @click="submitForm"
               color="red"
-              icon="send"
-              label="Enviar"
               v-show="showButton"
-            />
-            <q-spinner
+            >
+              <span>Entrar</span>
+              <q-icon name="login" class="q-ml-sm"/>
+            </q-btn>
+              <q-spinner
               :size="80"
               :color="loading ? 'red' : 'transparent'"
               v-show="!showButton"
@@ -76,6 +95,7 @@
 <script>
 import { api } from 'boot/axios';
 import { QSpinner } from 'quasar';
+import { ref } from 'vue';
 
 export default {
   name: 'login_',
@@ -90,6 +110,7 @@ export default {
       showButton: true,
       persistent: false,
       missingFieldsDialog: false,
+      isPwd: ref(true),
     };
   },
   methods: {
@@ -131,9 +152,15 @@ export default {
 </script>
 
 <style scoped>
+
+.login {
+  min-width: 40%;
+  
+}
+
 .my-card0 {
   top: 10%;
-  padding: 10%;
+  padding: 20px;
   width: 100%;
 }
 
@@ -141,5 +168,28 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.titulo_login {
+  text-align: center;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.imagem_login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .login {
+    min-width: 100%;
+  }
+  .my-card0 {
+  top: 5%;
+  padding: 20px;
+  width: 100%;
+}
+ 
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <q-page class="page flex justify-center">
-    <div class="q-pa-lg" style="width: 70%;">
+    <div class="q-pa-lg" style="width: 90%;">
       <div v-if="loading" class="loading-animation"></div>
 
       <div v-else >
@@ -11,7 +11,7 @@
           class="q-gutter-md"
         >
 
-        <div><h2>Notícias</h2></div>
+        <h2 class="titulo2">Adicionar Notícia</h2>
           <q-input
             filled
             v-model="titulo"
@@ -90,10 +90,9 @@
                     />
 
           <div class="flex flex-center">
-            <q-btn label="Enviar" type="submit"  @click="submitForm"
-            icon="send" color="red"/>
-
             <q-btn label="Cancelar" to="/home" color="primary" flat/>
+            <q-btn label="Enviar" type="submit"  @click="submitForm"
+            icon="send" color="red"/>       
           </div>
         </q-form>
     </q-card>
@@ -226,16 +225,25 @@ export default defineComponent({
 }
 .loading-animation {
 
-width: 100px;
-height: 100px;
-flex-wrap: wrap;
-justify-content: center;
-border: 5px solid #ccc;
-border-top-color: #e90808;
-border-radius: 50%;
-animation: spin 1s linear infinite;
-margin: 0 auto;
-
+  width: 100px;
+  height: 100px;
+  flex-wrap: wrap;
+  justify-content: center;
+  border: 5px solid #ccc;
+  border-top-color: #e90808;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
 }
+
+.titulo2 {
+    font-size: 30px;
+    font-family: 'Courier New';
+    text-align: center;
+    font-weight: bold;
+    border-radius: 10px;
+    color: #000000;
+    margin-bottom: 20px;
+  }
 
 </style>

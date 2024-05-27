@@ -1,6 +1,6 @@
 <template>
   <q-page class="page flex justify-center">
-    <div class="q-pa-lg" style="width: 70%;">
+    <div class="q-pa-lg">
       <div v-if="loading" class="loading-animation"></div>
 
       <div v-else >
@@ -11,9 +11,10 @@
             @reset="onReset"
             class="q-gutter-md"
           >
-          <h4 class="campo">
-            <q-icon name="edit" color="red" />
-            {{ isUpdate ? 'Atualizar' : 'Adicionar' }} dados pessoais:
+          <h4 class="titulo3">
+            <q-icon name="badge" color="green" />
+             Dados Pessoais
+            <q-icon name="badge" color="green" />
           </h4>
 
             <q-input
@@ -66,7 +67,11 @@
             </template>
           </q-input>
 
-            <h4 class="campo"><q-icon name="edit" color="red" /> Endereço </h4>
+            <h4 class="titulo3">
+              <q-icon name="house" color="orange" />
+               Endereço
+               <q-icon name="emoji_transportation" color="orange" />
+               </h4>
             <q-input
               filled
               v-model="endereco"
@@ -102,7 +107,11 @@
               class="campo"
               :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
             />
-            <h4 class="campo"><q-icon name="edit" color="red" /> SUS </h4>
+            <h4 class="titulo3">
+              <q-icon name="medical_information" color="red" /> 
+              Informações Médicas
+              <q-icon name="medical_information" color="red" /> 
+            </h4>
             <div class="">
                 <div class="q-px-sm">
                   Forma: <strong>{{ shape }}</strong>
@@ -119,19 +128,6 @@
                 Você selecionou: <strong>{{ shape }}</strong>
               </div>
             </div>
-
-            <q-file filled bottom-slots v-model="img" label="Imagem" counter accept="image/*">
-              <template v-slot:prepend>
-                <q-icon name="cloud_upload" @click.stop.prevent />
-              </template>
-              <template v-slot:append>
-                <q-icon name="close" @click.stop.prevent="clearImage" class="cursor-pointer" />
-              </template>
-
-              <template v-slot:hint>
-                Imagem do exame de Escarro (não obrigatório)
-              </template>
-          </q-file>
 
             <q-input
               filled
@@ -177,9 +173,8 @@
             />
 
             <div class="flex flex-center">
-              <q-btn label="Enviar" type="submit"  @click="submitForm" icon="send" color="red"/>
-
               <q-btn label="Cancelar" to="/home" color="primary" flat/>
+              <q-btn label="Enviar" type="submit"  @click="submitForm" icon="send" color="red"/>  
             </div>
           </q-form>
       </q-card>
@@ -296,7 +291,6 @@ export default defineComponent({
         this.refencia = paciente.ponto_ref;
         this.telefone = paciente.telefone;
         this.forma = paciente.forma;
-        this.img = paciente.img_trat;
         this.cartaoSus = paciente.cartao_sus;
         this.sinan = paciente.n_sinan;
         this.unidadeTratamento = paciente.unidade_tratamento;
@@ -341,7 +335,6 @@ export default defineComponent({
           formData.append('n_sinan', this.sinan);
           formData.append('unidade_tratamento', this.unidadeTratamento);
           formData.append('unidade_cad', this.unidadeCadastro);
-          formData.append('img', this.img);
 
           if (!this.isUpdate) {
             await api.post('/create-paciente', formData, {
@@ -382,8 +375,7 @@ top: 100px;
 width: 100%;
 }
 .card4{
-  padding: 10%;
-  width: 100%;
+  padding: 5%;
 }
 .data{
   width: 50%;
@@ -399,6 +391,15 @@ border-top-color: #e90808;
 border-radius: 50%;
 animation: spin 1s linear infinite;
 margin: 0 auto;
-
 }
+
+.titulo3 {
+    font-size: 30px;
+    font-family: 'Courier New';
+    text-align: center;
+    font-weight: bold;
+    border-radius: 10px;
+    color: #000000;
+    margin-bottom: 20px;
+  }
 </style>

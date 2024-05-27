@@ -112,6 +112,28 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <q-dialog v-model="entrar" persistent transition-show="scale" transition-hide="scale">
+      <q-card class="bg-7 entrada text-black" style="width: 600px">
+        <q-card-section>
+          <div class="text-h6">Bem-vindo(a) ao TB Koch!</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none" style="text-align: justify;">
+          Queremos que sua experiência online seja tão informativa e relevante quanto 
+          possível. Para isso, utilizamos <span style="color: blue; text-decoration: 
+          underline; text-transform: uppercase;"><a href="/#/info">Cookies</a></span>, que são 
+          pequenos arquivos de texto armazenados no seu dispositivo, para ajudar a 
+          melhorar nosso site e oferecer uma experiência mais personalizada.
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="Recusar" @click="fazerLogoff"  />
+          <q-btn color="primary" label="Aceitar" @click="aceitarB" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+    
     <q-dialog v-model="dialogAdicionarPedido" >
             <q-card>
               <template v-if="!loadingAtualiza">
@@ -202,6 +224,7 @@ export default defineComponent({
       prefacio: '',
       img: null,
       descricao: '',
+      entrar: false,
       noticiaSelecionada: null,
       descLongaFormatada: '',
       loadingAtualiza: false,
@@ -209,12 +232,35 @@ export default defineComponent({
   },
   mounted() {
     this.carregarNoticias();
+    // eslint-disable-next-line
+    const auth = localStorage.getItem('cookie');
+      console.log(auth);
+      if (auth !== 's') {
+        // eslint-disable-next-line
+        this.entrar = true;
+      } else {
+        // eslint-disable-next-line
+        this.entrar = false;
+      }
   },
   computed: {
 
     isUser() {
       const auth = localStorage.getItem('auth');
       return auth === 'user';
+    },
+
+    isCookie() {
+      const auth = localStorage.getItem('cookie');
+      console.log(auth);
+      if (auth !== 's') {
+        // eslint-disable-next-line
+        this.entrar = true;
+      } else {
+        // eslint-disable-next-line
+        this.entrar = false;
+      }
+      return true;
     },
 
     isAgente() {
@@ -264,7 +310,7 @@ export default defineComponent({
       const token = localStorage.getItem('token');
       if (this.indexExclusao !== null) {
         try {
-          await api.delete(`https://api-koch.onrender.com/delete-new/${this.id}`, {
+          await api.delete(`/delete-new/${this.id}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -310,6 +356,17 @@ export default defineComponent({
       this.noticiaSelecionada = null;
       this.dialogAdicionarPedido = false;
     },
+    fazerLogoff() {
+      // Lógica para o logoff
+      localStorage.removeItem('token');
+      localStorage.removeItem('auth');
+      localStorage.removeItem('cookie');
+      window.location.href = '/';
+    },
+
+    aceitarB() {
+      localStorage.setItem('cookie', 's');
+    },
     async submitFormUpNoticia(event) {
       try {
         this.loadingAtualiza = true;
@@ -332,7 +389,7 @@ export default defineComponent({
 
         if (this.noticiaSelecionadaId) {
           await api.put(
-            `https://api-koch.onrender.com/alter-new/${this.noticiaSelecionadaId}`,
+            `/alter-new/${this.noticiaSelecionadaId}`,
             formData,
             {
               headers: {
@@ -363,6 +420,10 @@ export default defineComponent({
   &__list{
     width: 80%;
   }
+}
+
+.entrada {
+  background-color: #EFE2E2; 
 }
 .baixo{
   position: relative;

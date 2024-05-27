@@ -79,7 +79,6 @@
 
 <script>
 import { ref, watch } from 'vue';
-import { api } from 'boot/axios';
 import FooterPage from '../components/FooterPage.vue';
 
 export default {
@@ -104,6 +103,7 @@ export default {
       // Lógica para o logoff
       localStorage.removeItem('token');
       localStorage.removeItem('auth');
+      localStorage.removeItem('cookie');
       window.location.href = '/';
     }
     function abrirDialogo() {
@@ -112,37 +112,7 @@ export default {
     function clearFile() {
       model.value = null;
     }
-    const envio = async () => {
-      try {
-        loading.value = true;
-        const formData = new FormData();
-        formData.append('file', model.value);
-        console.log(model);
-        const response = await api.post(
-          'https://hunterph.com.br/upload',
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-            responseType: 'arraybuffer',
-          },
-        );
-
-        if (response.status === 200) {
-          const blob = new Blob([response.data], { type: 'image/png' });
-          const imageUrl = URL.createObjectURL(blob);
-
-          uploadedImageUrl.value = imageUrl;
-          showImage.value = true;
-        }
-        console.log(response);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        loading.value = false;
-      }
-    };
+   
     return {
       rightDrawerOpen,
       darkMode,
@@ -155,7 +125,6 @@ export default {
       loading,
       uploadedImageUrl,
       showImage,
-      envio,
 
     };
   },

@@ -1,6 +1,6 @@
 <template>
   <q-page class="page flex justify-center">
-    <div class="q-pa-lg" style="width: 70%;">
+    <div class="q-pa-lg" style="width: 90%;">
 
     <q-card class="cardProntuario">
       <q-form
@@ -8,7 +8,7 @@
         @reset="onReset"
         class="q-gutter-md"
       >
-      <h4 class="campo">
+      <h4 class="tituloP">
         <q-icon name="description" color="red"
         style="align-items: center;" />
         Prontuário
@@ -253,9 +253,8 @@
             </div>
           </div>
           <q-card-actions align="center" class="bg-white text-teal">
-            <q-btn label="Enviar" type="submit" @click="submitForm" icon="send" color="red" />
-
             <q-btn label="Cancelar" to="/pacientes" color="primary" flat />
+            <q-btn label="Enviar" type="submit" @click="submitForm" icon="send" color="red" />
           </q-card-actions>
 
       </q-form>
@@ -363,18 +362,28 @@ export default defineComponent({
 <style >
 .baixoProntuario{
 position: relative;
-top: 100px;
+
 width: 100%;
 }
+
+.tituloP {
+    font-size: 30px;
+    font-family: 'Courier New';
+    text-align: center;
+    font-weight: bold;
+    border-radius: 10px;
+    color: #000000;
+    margin-bottom: 20px;
+  }
 .cardProntuario{
-  padding: 10%;
+  padding: 5%;
   width: 100%;
 }
 .dataProntuario{
   width: 50%;
 }
 .h3a{
-    font-size: 18px;
+    font-size: 15px;
     font-weight: bold;
     margin-top: 20px;
     margin-bottom: 10px;

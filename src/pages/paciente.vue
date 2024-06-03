@@ -118,7 +118,47 @@
           </q-carousel-slide>
           <q-carousel-slide name="acompanhamento" class="column no-wrap center">
             <div class="q-ma-md q-pa-md"
-              style="display: flex; flex-wrap: wrap; justify-content: center;">
+              style="display: flex; flex-wrap: wrap; justify-content: center;"><div class="q-pa-md" style="max-width: 350px">
+                <div v-if="feedbackInfo">
+                  <q-card>
+                    <q-card-section>
+                      <ul class="medical-history">
+                        <div class="q-dialog-title"><strong></strong></div>
+                        <h6 style="color: green; text-align: center;">Informações Feedback</h6>
+                          <div class="registro-item">
+                            <div class="registro-date"><strong>Escolaridade:</strong>
+                              {{ feedbackInfo.escolaridade }}</div>
+                            <div class="registro-description"><strong>Zona de Habitação:</strong>
+                              {{ feedbackInfo.zona_habitacao }}</div>
+                            <div class="registro-description"><strong>Sexo:</strong>
+                              {{ feedbackInfo.sexo }}</div>  
+                            <div class="registro-description"><strong>Faixa Etária:</strong>
+                              {{ feedbackInfo.faixa_etaria }}</div>
+                            <div class="registro-description"><strong>Renda Familiar:</strong>
+                            {{ feedbackInfo.renda_familiar }}</div> 
+                            <div class="registro-description"><strong>Quantidade de Familiares:</strong>
+                            {{ feedbackInfo.qtd_familiares }}</div> 
+                            <div class="registro-description"><strong>Etnia:</strong>
+                            {{ feedbackInfo.etnia }}</div>
+                            <div class="registro-description"><strong>Tempo de Tratamento:</strong>
+                            {{ feedbackInfo.tempo_trat }}</div> 
+                            <div class="registro-description"><strong>Apoio Familiar:</strong>
+                            {{ feedbackInfo.apoio_familiar }}</div> 
+                            <div class="registro-description"><strong>Informativo:</strong>
+                            {{ feedbackInfo.info }}</div> 
+                            <div class="registro-description"><strong>Alimentação:</strong>
+                            {{ feedbackInfo.alimentacao }}</div> 
+                            <div class="registro-description"><strong>Apoio Ubs:</strong>
+                            {{ feedbackInfo.apoio_ubs }}</div> 
+                            <div class="registro-description"><strong>Expectativa:</strong>
+                            {{ feedbackInfo.expectativa }}</div>           
+                          </div>
+                      </ul>
+                    </q-card-section>
+                  </q-card>
+                </div>
+              </div>
+
               <div class="q-pa-md" style="max-width: 350px" v-if="!isAgente">
                 <q-list bordered>
                   <h6 style="color: orange; text-align: center;">Teste de Bacilos</h6>
@@ -138,6 +178,8 @@
 
                         <q-btn outline color="primary"
                         icon="image_search" @click="mostrarImg(post.img, post.data)" />
+                        <q-btn outline color="primary"
+                        icon="download" @click="downloadImage(post.img)" />
 
                       </q-item-section>
                     </q-item>
@@ -162,7 +204,7 @@
 
                 </q-list>
               </div>
-
+              
               <div class="q-pa-md" style="max-width: 350px">
                 <div v-if="prontuarioInfo">
                   <q-card>
@@ -392,6 +434,131 @@
           <h6 style="text-align: center">{{ currentQuestion }}</h6>
 
             <div v-if="currentQuestionIndex === 0" 
+              class="p1 q-gutter-sm" >
+              <q-radio keep-color v-model="escolaridade" val="Fundamental" 
+              label="Fundamental" color="teal" checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="escolaridade" val="Médio"
+               label="Médio" color="red"  checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="escolaridade" val="Superior"
+              label="Superior" color="green" checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+            </div>
+
+            <div v-if="currentQuestionIndex === 1" 
+            class="p1 q-gutter-sm" >
+              <q-radio keep-color v-model="zona_h" val="Zona Rural" 
+              label="Zona Rural" color="teal" checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="zona_h" val="Zona Urbana"
+              label="Zona Urbana" color="orange"  checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+            </div>
+
+            <div v-if="currentQuestionIndex === 2" 
+            class="p1 q-gutter-sm" >
+              <q-radio keep-color v-model="sexo" val="Masculino" 
+              label="Masculino" color="teal" checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="sexo" val="Feminino"
+              label="Feminino" color="orange"  checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="sexo" val="Outros"
+               label="Outros" color="red"  checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+            </div>
+
+            <div v-if="currentQuestionIndex === 3" 
+            class="p1 q-gutter-sm" >
+              <q-radio keep-color v-model="faixa_etaria" val="1 - 10 anos" 
+              label="1 - 10 anos" color="teal" checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="faixa_etaria" val="11 - 20 anos"
+              label="11 - 20 anos" color="orange"  checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="faixa_etaria" val="21 - 30 anos"
+               label="21 - 30 anos" color="red"  checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="faixa_etaria" val="31 - 50"
+              label="31 - 50" color="cyan" checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="faixa_etaria" val="mais de 51 anos"
+              label="mais de 51 anos" color="green" checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+            </div>
+
+            <div v-if="currentQuestionIndex === 4" 
+            class="p1 q-gutter-sm" >
+              <q-radio keep-color v-model="renda_familiar" val="Menos de um Salário" 
+              label="Menos de um Salário" color="teal" checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="renda_familiar" val="R$1.412 - R$2.824"
+              label="R$1.412 - R$2.824" color="orange"  checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="renda_familiar" val="R$2.824 - R$4.236"
+               label="R$2.824 - R$4.236" color="red"  checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="renda_familiar" val="Mais de R$4.236"
+              label="Mais de R$4.236" color="cyan" checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+            </div>
+
+            <div v-if="currentQuestionIndex === 5" 
+            class="p1 q-gutter-sm" >
+              <q-radio keep-color v-model="qtd_familiar" val="Vivo sozinho(a)" 
+              label="Vivo sozinho(a)" color="teal" checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="qtd_familiar" val="2 há 4 pessoas"
+              label="2 há 4 pessoas" color="orange"  checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="qtd_familiar" val="3 há 6 pessoas"
+               label="3 há 6 pessoas" color="red"  checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="qtd_familiar" val="Mais de 7 pessoas"
+              label="Mais de 7 pessoas" color="green" checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+            </div>
+
+            <div v-if="currentQuestionIndex === 6" 
+              class="p1 q-gutter-sm" >
+              <q-radio keep-color v-model="usoD_d" val="Álcool" 
+              label="Álcool" color="teal" checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="usoD_d" val="Cigarro"
+              label="Cigarro" color="orange"  checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="usoD_d" val="Álcool e cigarro"
+               label="Álcool e cigarro" color="red"  checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="usoD_d" val="Outros"
+              label="Outros" color="cyan" checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="usoD_d" val="Nunca usei"
+              label="Nunca usei" color="green" checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+            </div>
+
+            <div v-if="currentQuestionIndex === 7" 
+              class="p1 q-gutter-sm" >
+              <q-radio keep-color v-model="etnia" val="Branco" 
+              label="Branco" color="teal" checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="etnia" val="Pardo"
+              label="Pardo" color="orange"  checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="etnia" val="Negro"
+               label="Negro" color="red"  checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="etnia" val="Indíngena"
+              label="Indíngena" color="cyan" checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+              <q-radio keep-color v-model="etnia" val="Amarelo"
+              label="Amarelo" color="green" checked-icon="task_alt" 
+              unchecked-icon="panorama_fish_eye"/>
+            </div>
+
+            <div v-if="currentQuestionIndex === 8" 
             class="p1 q-gutter-sm" >
               <q-radio keep-color v-model="tempoT" val="1 a 3 meses" 
               label="1 a 3 meses" color="teal" checked-icon="task_alt" 
@@ -407,7 +574,7 @@
               unchecked-icon="panorama_fish_eye"/>
             </div>
 
-            <div  v-if="currentQuestionIndex === 1" class="p1 q-gutter">
+            <div  v-if="currentQuestionIndex === 9" class="p1 q-gutter">
               <q-radio keep-color v-model="familia" val="Ruim" 
               label="Ruim" color="red" checked-icon="sentiment_dissatisfied" 
               unchecked-icon="panorama_fish_eye"/>
@@ -422,7 +589,7 @@
               unchecked-icon="panorama_fish_eye"/>
             </div>
 
-            <div  v-if="currentQuestionIndex === 2" class="p1 q-gutter-sm">
+            <div  v-if="currentQuestionIndex === 10" class="p1 q-gutter-sm">
               <q-radio keep-color v-model="informativo" val="Não sei nada" 
               label="Ruim" color="red" checked-icon="sentiment_dissatisfied" 
               unchecked-icon="panorama_fish_eye"/>
@@ -437,7 +604,7 @@
               unchecked-icon="panorama_fish_eye"/>
             </div>
 
-            <div  v-if="currentQuestionIndex === 3" class="p1 q-gutter">
+            <div  v-if="currentQuestionIndex === 11" class="p1 q-gutter">
               <q-radio keep-color v-model="alimentacao" val="Ruim" 
               label="Ruim" color="red" checked-icon="sentiment_dissatisfied" 
               unchecked-icon="panorama_fish_eye"/>
@@ -452,7 +619,7 @@
               unchecked-icon="panorama_fish_eye"/>
             </div>
 
-            <div  v-if="currentQuestionIndex === 4" class="p1 q-gutter">
+            <div  v-if="currentQuestionIndex === 12" class="p1 q-gutter">
               <q-radio keep-color v-model="apoioUBS" val="Ruim" 
               label="Ruim" color="red" checked-icon="sentiment_dissatisfied" 
               unchecked-icon="panorama_fish_eye"/>
@@ -467,22 +634,7 @@
               unchecked-icon="panorama_fish_eye"/>
             </div>
 
-            <div  v-if="currentQuestionIndex === 5" class="p1 q-gutter">
-              <q-radio keep-color v-model="medicacao" val="Ruim" 
-              label="Ruim" color="red" checked-icon="sentiment_dissatisfied" 
-              unchecked-icon="panorama_fish_eye"/>
-              <q-radio keep-color v-model="medicacao" val="Regular"
-              label="Regular" color="grey"  checked-icon="sentiment_neutral" 
-              unchecked-icon="panorama_fish_eye"/>
-              <q-radio keep-color v-model="medicacao" val="Bom"
-               label="Bom" color="green"  checked-icon="sentiment_satisfied" 
-              unchecked-icon="panorama_fish_eye"/>
-              <q-radio keep-color v-model="medicacao" val="Ótimo"
-              label="Ótimo" color="blue" checked-icon="sentiment_very_satisfied" 
-              unchecked-icon="panorama_fish_eye"/>
-            </div>
-
-            <div  v-if="currentQuestionIndex === 6" class="p1 q-gutter">
+            <div  v-if="currentQuestionIndex === 13" class="p1 q-gutter">
               <q-radio keep-color v-model="exepctativa" val="Ruim" 
               label="Ruim" color="red" checked-icon="sentiment_dissatisfied" 
               unchecked-icon="panorama_fish_eye"/>
@@ -500,7 +652,7 @@
           <div style="margin-top: 10px; display: flex; justify-content: space-between;">
             <q-card-actions class="bg-white text-teal">
               <q-btn
-                v-if="currentQuestionIndex > 0 && currentQuestionIndex < 7"
+                v-if="currentQuestionIndex > 0"
                 round
                 color="white"
                 icon="arrow_back"
@@ -509,11 +661,11 @@
               />
             </q-card-actions>
             <q-card-actions class="bg-white text-teal">
-              <q-btn v-if="currentQuestionIndex === 6" label="ENVIAR"></q-btn>
+              <q-btn v-if="currentQuestionIndex === 13" label="ENVIAR" @click="feedbackAdd"></q-btn>
             </q-card-actions>
             <q-card-actions class="bg-white text-teal">
               <q-btn
-                v-if="currentQuestionIndex < 6"
+                v-if="currentQuestionIndex < 13"
                 round
                 type="submit"
                 color="white"
@@ -537,6 +689,8 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import moment from 'moment';
 import 'moment/locale/pt-br';
+import axios from 'axios';
+import FileSaver from 'file-saver';
 import {
   QDialog, QCard, QCardSection, QInput, QBtn,
 } from 'quasar';
@@ -558,6 +712,7 @@ export default {
       prontuarioChave: false,
       showProntuarioDialog: false,
       prontuarioInfo: null,
+      feedbackInfo: null,
       slide: ref('dados'),
       text: '',
       lorem: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. ',
@@ -599,21 +754,35 @@ export default {
       imgDisc: '',
       feedbackDialog: false,
       questions: [
+        'Qual o seu nível de escolaridade?',
+        'Qual sua zona de habitação?',
+        'Qual seu sexo?',
+        'Qual sua faixa etária?',
+        'Qual sua renda familiar?',
+        'Qual pessoas moram na sua casa?',
+        'Você faz ou já fez uso de entorpecentes?',
+        'A qual etnia você acredita pertencer?',
         'A quanto tempo está sendo tratado?', 
-        'Quanto de Apoio Familiar você recebe?', 
+        'Como é o Apoio Familiar que você recebe?', 
         'O quão bem informado sobre sua doença você é?',
         'Como você classifica sua alimentação?',
-        'Você quanto de Apoio da UBS você recebe?',
-        'Como você se sente sobre sua Medicação?',
-        'Em escala o quanto você esta melhorando?'],
+        'Como você classifica o Apoio da UBS você recebe?',
+        'Em escala o quanto você acredita esta melhorando?'],
       currentQuestionIndex: 0,
       answer: '',
+      escolaridade: '',
+      zona_h: '',
+      sexo: '',
+      faixa_etaria: '',
+      renda_familiar: '',
+      qtd_familiar: '',
+      usoD_d: '',
+      etnia: '',
       tempoT: '',
       familia: '',
       informativo: '',
       alimentacao: '',
       apoioUBS: '',
-      medicacao: '',
       exepctativa: '',
 
     };
@@ -635,6 +804,7 @@ export default {
     this.carregaPaciente(this.$route.params.id)
       .then(() => {
         this.verificarProntuario(this.$route.params.id);
+        this.verificarFeed(this.$route.params.id);
         this.carregarEventos(this.$route.params.id);
         this.carregarExames(this.$route.params.id);
       });
@@ -708,33 +878,7 @@ export default {
       const options = { day: '2-digit', month: 'long', year: 'numeric' };
       return new Date(date).toLocaleDateString('pt-BR', options);
     },
-    async baixarImagem(urlImagem) {
-      try {
-        const link = document.createElement('a');
-        link.href = urlImagem;
-        link.download = '1702070551346.jpg'; // Defina o nome do arquivo desejado
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      } catch (error) {
-        console.error('Erro ao baixar a imagem:', error);
-      }
-    },
-    async downloadItem() {
-      try {
-        const url = 'https://storage.googleapis.com/tb-koch.appspot.com/exames/1702070551346.jpg';
-        const label = '1702070551346.jpg';
-        const response = await api.get(url, { responseType: 'blob' });
-        const blob = new Blob([response.data], { type: 'application/img' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = label;
-        link.click();
-        URL.revokeObjectURL(link.href);
-      } catch (erro) {
-        console.log(erro);
-      }
-    },
+
     async carregaPaciente(id) {
       const token = localStorage.getItem('token');
       const url = `/paciente/${id}`;
@@ -766,6 +910,29 @@ export default {
         this.prontuarioChave = false;
         this.isLoading = false;
       }
+    },
+
+    async verificarFeed(id) {
+      const token = localStorage.getItem('token');
+      const url = `/feedback/${id}`;
+      try {
+        const resposta = await api.get(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        this.feedbackInfo = resposta.data;
+
+        this.isLoading = false;
+      } catch (error) {
+        this.isLoading = false;
+      }
+    },
+
+    async downloadImage(url) {
+      const response = await axios.get(url, { responseType: 'blob' });
+      const blob = new Blob([response.data], { type: 'image/jpeg' });
+      FileSaver.saveAs(blob, 'image.jpg');
     },
 
     mostrarImg(img, disc) {
@@ -856,6 +1023,41 @@ export default {
           this.removeuEvento = true;
         }
       }
+    },
+
+    async feedbackAdd() {
+      try {
+        const token = localStorage.getItem('token');
+        const formData = new FormData();
+
+        formData.append('escolaridade', this.escolaridade);
+        formData.append('zona_habitacao', this.zona_h);
+        formData.append('sexo', this.sexo);
+        formData.append('faixa_etaria', this.faixa_etaria);
+        formData.append('renda_familiar', this.renda_familiar);
+        formData.append('qtd_familiares', this.qtd_familiar);
+        formData.append('uso_de_drogas', this.usoD_d);
+        formData.append('etnia', this.etnia);
+        formData.append('tempo_trat', this.tempoT);
+        formData.append('apoio_familiar', this.familia);
+        formData.append('info', this.informativo);
+        formData.append('alimentacao', this.alimentacao);
+        formData.append('apoio_ubs', this.apoioUBS);
+        formData.append('expectativa', this.exepctativa);
+        formData.append('paciente', this.$route.params.id);
+
+        await api.post('/create-feedback', formData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        this.$router.push('/pacientes');
+      } catch (error) {
+        console.log(error);
+        this.persistent = true;
+      } 
     },
 
     closeDialog() {

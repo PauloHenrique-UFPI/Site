@@ -1,0 +1,9 @@
+[
+    {
+      "origin": ["https://tbkoch.com.br/site/", "http://localhost:8080"],
+      "method": ["GET"],
+      "maxAgeSeconds": 3600,
+      "responseHeader": ["Content-Type"]
+    }
+  ]
+  

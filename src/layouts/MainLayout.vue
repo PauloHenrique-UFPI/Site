@@ -54,7 +54,7 @@
         <q-route-tab to="/userPage" label="Usuários" v-if="!isUser && !isAgente && !isMed"/>
         <q-route-tab to="/pacientes" label="Pacientes" v-if="!isUser" />
         <q-route-tab to="/minhaFicha" label="Minha Ficha" v-if="isUser" />
-        <q-route-tab to="/paginaSobre" label="Sobre nós" v-if="!isUser"/>
+        <q-route-tab to="/paginaSobre" label="Sobre nós"/>
       </q-tabs>
 
     </q-header>

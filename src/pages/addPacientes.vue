@@ -35,14 +35,15 @@
               :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
             />
 
-            <q-input
+            <q-select
               filled
               v-model="naturalidade"
+              :options="optionsN"
               label="Naturalidade *"
               hint="Natural de onde?"
-              lazy-rules
               :rules="[ val => val && val.length > 0 || 'Campo obrigatório']"
-            />
+
+              />
             <q-input
               filled
               v-model="profissao"
@@ -255,6 +256,9 @@ export default defineComponent({
       options: [
         'Picos', 'Vila Nova', 'Ipiranga', 'Oeiras', 'Outro',
       ],
+      optionsN: [
+        'Brasileiro(a)', 'Argentino(a)', 'Peruano(a)', 'Angolano(a)', 'Outra',
+      ],
     };
   },
   computed: {
@@ -340,19 +344,20 @@ export default defineComponent({
             await api.post('/create-paciente', formData, {
               headers: {
                 Authorization: `Bearer ${token}`,
-                'Content-Type': 'multipart/form-data',
+                'Content-Type': 'application/json',
               },
             });
           } else {
             await api.put(`/alter-paciente/${this.PacienteId}`, formData, {
               headers: {
                 Authorization: `Bearer ${token}`,
-                'Content-Type': 'multipart/form-data',
+                'Content-Type': 'application/json',
               },
             });
           }
           this.$router.push('/pacientes');
         } catch (error) {
+          console.log(error);
           this.persistent = true;
           this.loading = false;
         } finally {
